@@ -33,10 +33,52 @@
       "namedRegex": "^/_not\\-found(?:/)?$"
     },
     {
+      "page": "/admin/baptisms",
+      "regex": "^/admin/baptisms(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/baptisms(?:/)?$"
+    },
+    {
+      "page": "/admin/church-groups",
+      "regex": "^/admin/church\\-groups(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/church\\-groups(?:/)?$"
+    },
+    {
       "page": "/admin/dashboard",
       "regex": "^/admin/dashboard(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/admin/dashboard(?:/)?$"
+    },
+    {
+      "page": "/admin/families",
+      "regex": "^/admin/families(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/families(?:/)?$"
+    },
+    {
+      "page": "/admin/members",
+      "regex": "^/admin/members(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/members(?:/)?$"
+    },
+    {
+      "page": "/admin/posts",
+      "regex": "^/admin/posts(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/posts(?:/)?$"
+    },
+    {
+      "page": "/admin/settings",
+      "regex": "^/admin/settings(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/settings(?:/)?$"
+    },
+    {
+      "page": "/forgot-password",
+      "regex": "^/forgot\\-password(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/forgot\\-password(?:/)?$"
     },
     {
       "page": "/login",

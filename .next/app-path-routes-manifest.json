@@ -1,8 +1,15 @@
 {
   "/_not-found/page": "/_not-found",
-  "/admin/dashboard/page": "/admin/dashboard",
-  "/posts/page": "/posts",
   "/page": "/",
+  "/posts/page": "/posts",
+  "/(auth)/login/page": "/login",
+  "/admin/church-groups/page": "/admin/church-groups",
+  "/admin/dashboard/page": "/admin/dashboard",
+  "/admin/members/page": "/admin/members",
+  "/admin/baptisms/page": "/admin/baptisms",
+  "/admin/posts/page": "/admin/posts",
   "/(auth)/register/page": "/register",
-  "/(auth)/login/page": "/login"
+  "/(auth)/forgot-password/page": "/forgot-password",
+  "/admin/families/page": "/admin/families",
+  "/admin/settings/page": "/admin/settings"
 }
