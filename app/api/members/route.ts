@@ -54,20 +54,36 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
+    const { churchGroupIds, ...memberData } = body;
     
+    // Create member with church group relations
     const member = await prisma.member.create({
       data: {
-        ...body,
-        createdBy: session.user.id
+        ...memberData,
+        createdBy: session.user.id,
+        // Create church group relations if provided
+        churchGroups: churchGroupIds && churchGroupIds.length > 0 ? {
+          create: churchGroupIds.map((groupId: string) => ({
+            churchGroupId: groupId
+          }))
+        } : undefined
       },
-      include: { family: true, churchGroups: true, baptism: true }
+      include: { 
+        family: true, 
+        churchGroups: {
+          include: {
+            churchGroup: true
+          }
+        }, 
+        baptism: true 
+      }
     });
 
     return NextResponse.json(member, { status: 201 });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error creating Member:', error);
     return NextResponse.json(
-      { error: 'Failed to create Member' },
+      { error: error.message || 'Failed to create Member' },
       { status: 500 }
     );
   }

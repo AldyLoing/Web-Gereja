@@ -126,6 +126,12 @@
       "namedRegex": "^/admin/members(?:/)?$"
     },
     {
+      "page": "/admin/members/create",
+      "regex": "^/admin/members/create(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/members/create(?:/)?$"
+    },
+    {
       "page": "/admin/posts",
       "regex": "^/admin/posts(?:/)?$",
       "routeKeys": {},
