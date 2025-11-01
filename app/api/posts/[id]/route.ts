@@ -6,7 +6,7 @@ import { authOptions } from '@/lib/auth';
 // GET /api/posts/[id] - Get single Post
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -14,12 +14,13 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { id } = await params;
     const post = await prisma.post.findUnique({
-      where: { id: params.id, deletedAt: null },
+      where: { id },
       include: { categories: true }
     });
 
-    if (!post) {
+    if (!post || post.deletedAt) {
       return NextResponse.json({ error: 'Post not found' }, { status: 404 });
     }
 
@@ -36,7 +37,7 @@ export async function GET(
 // PUT /api/posts/[id] - Update Post
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -44,10 +45,11 @@ export async function PUT(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
+    const { id } = await params;
     const body = await request.json();
     
     const post = await prisma.post.update({
-      where: { id: params.id, deletedAt: null },
+      where: { id },
       data: {
         ...body,
         updatedBy: session.user.id,
@@ -69,7 +71,7 @@ export async function PUT(
 // DELETE /api/posts/[id] - Soft delete Post
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -77,8 +79,9 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
+    const { id } = await params;
     await prisma.post.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         deletedAt: new Date(),
         deletedBy: session.user.id

@@ -6,7 +6,7 @@ import { authOptions } from '@/lib/auth';
 // GET /api/families/[id] - Get single Family
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -14,12 +14,13 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { id } = await params;
     const family = await prisma.family.findUnique({
-      where: { id: params.id, deletedAt: null },
+      where: { id },
       include: { members: true }
     });
 
-    if (!family) {
+    if (!family || family.deletedAt) {
       return NextResponse.json({ error: 'Family not found' }, { status: 404 });
     }
 
@@ -36,7 +37,7 @@ export async function GET(
 // PUT /api/families/[id] - Update Family
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -44,10 +45,11 @@ export async function PUT(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
+    const { id } = await params;
     const body = await request.json();
     
     const family = await prisma.family.update({
-      where: { id: params.id, deletedAt: null },
+      where: { id },
       data: {
         ...body,
         updatedBy: session.user.id,
@@ -69,7 +71,7 @@ export async function PUT(
 // DELETE /api/families/[id] - Soft delete Family
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -77,8 +79,9 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
+    const { id } = await params;
     await prisma.family.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         deletedAt: new Date(),
         deletedBy: session.user.id

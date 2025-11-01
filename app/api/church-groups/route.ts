@@ -17,14 +17,14 @@ export async function GET(request: NextRequest) {
     const skip = (page - 1) * limit;
 
     const [data, total] = await Promise.all([
-      prisma.churchgroup.findMany({
+      prisma.churchGroup.findMany({
         where: { deletedAt: null },
         include: { members: true },
         skip,
         take: limit,
         orderBy: { createdAt: 'desc' }
       }),
-      prisma.churchgroup.count({ where: { deletedAt: null } })
+      prisma.churchGroup.count({ where: { deletedAt: null } })
     ]);
 
     return NextResponse.json({
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
     
-    const churchgroup = await prisma.churchgroup.create({
+    const churchGroup = await prisma.churchGroup.create({
       data: {
         ...body,
         createdBy: session.user.id
@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
       include: { members: true }
     });
 
-    return NextResponse.json(churchgroup, { status: 201 });
+    return NextResponse.json(churchGroup, { status: 201 });
   } catch (error) {
     console.error('Error creating ChurchGroup:', error);
     return NextResponse.json(

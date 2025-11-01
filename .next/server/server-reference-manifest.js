@@ -1,1 +1,1 @@
-self.__RSC_SERVER_MANIFEST="{\"node\":{},\"edge\":{},\"encryptionKey\":\"process.env.NEXT_SERVER_ACTIONS_ENCRYPTION_KEY\"}"
+self.__RSC_SERVER_MANIFEST="{\"node\":{\"00b16107a7979679bb1df5b9758e5c34feaed37cdd\":{\"workers\":{\"app/admin/dashboard/page\":{\"moduleId\":\"9914\",\"async\":false}},\"layer\":{\"app/admin/dashboard/page\":\"action-browser\"},\"filename\":\"../E:\\\\Orders\\\\Project\\\\Web Gereja\\\\app\\\\actions\\\\dashboard.ts\",\"exportedName\":\"getDashboardStats\"}},\"edge\":{},\"encryptionKey\":\"process.env.NEXT_SERVER_ACTIONS_ENCRYPTION_KEY\"}"

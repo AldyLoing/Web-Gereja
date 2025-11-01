@@ -6,7 +6,7 @@ import { authOptions } from '@/lib/auth';
 // GET /api/church-groups/[id] - Get single ChurchGroup
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -14,16 +14,17 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const churchgroup = await prisma.churchgroup.findUnique({
-      where: { id: params.id, deletedAt: null },
+    const { id } = await params;
+    const churchGroup = await prisma.churchGroup.findUnique({
+      where: { id },
       include: { members: true }
     });
 
-    if (!churchgroup) {
+    if (!churchGroup || churchGroup.deletedAt) {
       return NextResponse.json({ error: 'ChurchGroup not found' }, { status: 404 });
     }
 
-    return NextResponse.json(churchgroup);
+    return NextResponse.json(churchGroup);
   } catch (error) {
     console.error('Error fetching ChurchGroup:', error);
     return NextResponse.json(
@@ -36,7 +37,7 @@ export async function GET(
 // PUT /api/church-groups/[id] - Update ChurchGroup
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -44,10 +45,11 @@ export async function PUT(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
+    const { id } = await params;
     const body = await request.json();
     
-    const churchgroup = await prisma.churchgroup.update({
-      where: { id: params.id, deletedAt: null },
+    const churchGroup = await prisma.churchGroup.update({
+      where: { id },
       data: {
         ...body,
         updatedBy: session.user.id,
@@ -56,7 +58,7 @@ export async function PUT(
       include: { members: true }
     });
 
-    return NextResponse.json(churchgroup);
+    return NextResponse.json(churchGroup);
   } catch (error) {
     console.error('Error updating ChurchGroup:', error);
     return NextResponse.json(
@@ -69,7 +71,7 @@ export async function PUT(
 // DELETE /api/church-groups/[id] - Soft delete ChurchGroup
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -77,8 +79,9 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
-    await prisma.churchgroup.update({
-      where: { id: params.id },
+    const { id } = await params;
+    await prisma.churchGroup.update({
+      where: { id },
       data: {
         deletedAt: new Date(),
         deletedBy: session.user.id

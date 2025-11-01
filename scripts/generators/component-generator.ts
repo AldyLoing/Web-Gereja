@@ -61,8 +61,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
 function generatePublicLayout(): string {
   return `import { ReactNode } from 'react';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+import { Navbar } from '@/components/Navbar';
+import { Footer } from '@/components/Footer';
 
 interface PublicLayoutProps {
   children: ReactNode;
