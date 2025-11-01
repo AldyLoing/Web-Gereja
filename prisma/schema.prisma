@@ -1,0 +1,275 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                BigInt    @id @default(autoincrement())
+  name              String
+  email             String    @unique
+  emailVerifiedAt   DateTime? @map("email_verified_at")
+  password          String
+  rememberToken     String?   @map("remember_token")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  createdFamilies      Family[]       @relation("FamilyCreator")
+  updatedFamilies      Family[]       @relation("FamilyUpdater")
+  deletedFamilies      Family[]       @relation("FamilyDeleter")
+  createdChurchGroups  ChurchGroup[]  @relation("ChurchGroupCreator")
+  updatedChurchGroups  ChurchGroup[]  @relation("ChurchGroupUpdater")
+  deletedChurchGroups  ChurchGroup[]  @relation("ChurchGroupDeleter")
+  createdMembers       Member[]       @relation("MemberCreator")
+  updatedMembers       Member[]       @relation("MemberUpdater")
+  deletedMembers       Member[]       @relation("MemberDeleter")
+  createdBaptisms      Baptism[]      @relation("BaptismCreator")
+  updatedBaptisms      Baptism[]      @relation("BaptismUpdater")
+  deletedBaptisms      Baptism[]      @relation("BaptismDeleter")
+  createdMortalities   Mortality[]    @relation("MortalityCreator")
+  updatedMortalities   Mortality[]    @relation("MortalityUpdater")
+  deletedMortalities   Mortality[]    @relation("MortalityDeleter")
+  createdPosts         Post[]         @relation("PostCreator")
+  updatedPosts         Post[]         @relation("PostUpdater")
+  deletedPosts         Post[]         @relation("PostDeleter")
+  createdCategories    Category[]     @relation("CategoryCreator")
+  updatedCategories    Category[]     @relation("CategoryUpdater")
+  deletedCategories    Category[]     @relation("CategoryDeleter")
+
+  @@map("users")
+}
+
+model Family {
+  id          BigInt    @id @default(autoincrement())
+  name        String
+  totalMember Int       @default(0) @map("total_member")
+  description String?   @db.Text
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+  createdById BigInt?   @map("created_by")
+  updatedById BigInt?   @map("updated_by")
+  deletedById BigInt?   @map("deleted_by")
+
+  // Relations
+  members    Member[]
+  createdBy  User?    @relation("FamilyCreator", fields: [createdById], references: [id])
+  updatedBy  User?    @relation("FamilyUpdater", fields: [updatedById], references: [id])
+  deletedBy  User?    @relation("FamilyDeleter", fields: [deletedById], references: [id])
+
+  @@index([createdById])
+  @@index([updatedById])
+  @@index([deletedById])
+  @@map("families")
+}
+
+model ChurchGroup {
+  id          BigInt    @id @default(autoincrement())
+  name        String
+  totalMember Int       @default(0) @map("total_member")
+  description String?   @db.Text
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+  createdById BigInt?   @map("created_by")
+  updatedById BigInt?   @map("updated_by")
+  deletedById BigInt?   @map("deleted_by")
+
+  // Relations
+  members    MemberChurchGroup[]
+  createdBy  User?               @relation("ChurchGroupCreator", fields: [createdById], references: [id])
+  updatedBy  User?               @relation("ChurchGroupUpdater", fields: [updatedById], references: [id])
+  deletedBy  User?               @relation("ChurchGroupDeleter", fields: [deletedById], references: [id])
+
+  @@index([createdById])
+  @@index([updatedById])
+  @@index([deletedById])
+  @@map("church_groups")
+}
+
+model Member {
+  id             BigInt    @id @default(autoincrement())
+  familyId       BigInt?   @map("family_id")
+  nik            String?
+  kkNumber       String?   @map("kk_number")
+  name           String
+  gender         String    @db.Char(1) // L/P
+  birthDate      DateTime? @map("birth_date") @db.Date
+  birthPlace     String?   @map("birth_place")
+  bloodGroup     String?   @map("blood_group") @db.VarChar(3)
+  address        String?
+  telp           String?
+  email          String?
+  maritalStatus  String?   @map("marital_status") @db.Char(1) // S/M/D/W
+  isBaptized     Boolean?  @map("is_baptized")
+  activityStatus String?   @map("activity_status")
+  status         Int       @db.SmallInt // 1=Active, 0=Inactive
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+  deletedAt      DateTime? @map("deleted_at")
+  createdById    BigInt?   @map("created_by")
+  updatedById    BigInt?   @map("updated_by")
+  deletedById    BigInt?   @map("deleted_by")
+
+  // Relations
+  family       Family?              @relation(fields: [familyId], references: [id])
+  churchGroups MemberChurchGroup[]
+  baptisms     Baptism[]
+  mortalities  Mortality[]
+  createdBy    User?                @relation("MemberCreator", fields: [createdById], references: [id])
+  updatedBy    User?                @relation("MemberUpdater", fields: [updatedById], references: [id])
+  deletedBy    User?                @relation("MemberDeleter", fields: [deletedById], references: [id])
+
+  @@index([familyId])
+  @@index([createdById])
+  @@index([updatedById])
+  @@index([deletedById])
+  @@map("members")
+}
+
+model MemberChurchGroup {
+  id             BigInt      @id @default(autoincrement())
+  memberId       BigInt      @map("member_id")
+  churchGroupId  BigInt      @map("church_group_id")
+  createdAt      DateTime    @default(now()) @map("created_at")
+  updatedAt      DateTime    @updatedAt @map("updated_at")
+
+  // Relations
+  member       Member      @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  churchGroup  ChurchGroup @relation(fields: [churchGroupId], references: [id], onDelete: Cascade)
+
+  @@index([memberId])
+  @@index([churchGroupId])
+  @@map("member_church_group")
+}
+
+model Baptism {
+  id           BigInt    @id @default(autoincrement())
+  memberId     BigInt?   @map("member_id")
+  name         String
+  birthDate    DateTime  @map("birth_date") @db.Date
+  baptismDate  DateTime? @map("baptism_date") @db.Date
+  baptismPlace String?   @map("baptism_place")
+  baptisedBy   String?   @map("baptised_by")
+  description  String?   @db.Text
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+  deletedAt    DateTime? @map("deleted_at")
+  createdById  BigInt?   @map("created_by")
+  updatedById  BigInt?   @map("updated_by")
+  deletedById  BigInt?   @map("deleted_by")
+
+  // Relations
+  member     Member? @relation(fields: [memberId], references: [id])
+  createdBy  User?   @relation("BaptismCreator", fields: [createdById], references: [id])
+  updatedBy  User?   @relation("BaptismUpdater", fields: [updatedById], references: [id])
+  deletedBy  User?   @relation("BaptismDeleter", fields: [deletedById], references: [id])
+
+  @@index([memberId])
+  @@index([createdById])
+  @@index([updatedById])
+  @@index([deletedById])
+  @@map("baptisms")
+}
+
+model Mortality {
+  id             BigInt    @id @default(autoincrement())
+  memberId       BigInt?   @map("member_id")
+  name           String
+  birthDate      DateTime? @map("birth_date") @db.Date
+  mortalityDate  DateTime? @map("mortality_date")
+  mortalityPlace String?   @map("mortality_place")
+  description    String?   @db.Text
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+  deletedAt      DateTime? @map("deleted_at")
+  createdById    BigInt?   @map("created_by")
+  updatedById    BigInt?   @map("updated_by")
+  deletedById    BigInt?   @map("deleted_by")
+
+  // Relations
+  member     Member? @relation(fields: [memberId], references: [id])
+  createdBy  User?   @relation("MortalityCreator", fields: [createdById], references: [id])
+  updatedBy  User?   @relation("MortalityUpdater", fields: [updatedById], references: [id])
+  deletedBy  User?   @relation("MortalityDeleter", fields: [deletedById], references: [id])
+
+  @@index([memberId])
+  @@index([createdById])
+  @@index([updatedById])
+  @@index([deletedById])
+  @@map("mortalities")
+}
+
+model Category {
+  id          BigInt    @id @default(autoincrement())
+  name        String
+  slug        String    @unique
+  description String?   @db.Text
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+  createdById BigInt?   @map("created_by")
+  updatedById BigInt?   @map("updated_by")
+  deletedById BigInt?   @map("deleted_by")
+
+  // Relations
+  posts      PostCategory[]
+  createdBy  User?          @relation("CategoryCreator", fields: [createdById], references: [id])
+  updatedBy  User?          @relation("CategoryUpdater", fields: [updatedById], references: [id])
+  deletedBy  User?          @relation("CategoryDeleter", fields: [deletedById], references: [id])
+
+  @@index([createdById])
+  @@index([updatedById])
+  @@index([deletedById])
+  @@map("categories")
+}
+
+model Post {
+  id          BigInt    @id @default(autoincrement())
+  title       String    @db.VarChar(1024)
+  slug        String    @db.VarChar(1024)
+  cover       String?   @db.Text
+  content     String?   @db.Text
+  publishedAt DateTime? @map("published_at")
+  isActive    Boolean   @default(false) @map("is_active")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+  createdById BigInt?   @map("created_by")
+  updatedById BigInt?   @map("updated_by")
+  deletedById BigInt?   @map("deleted_by")
+
+  // Relations
+  categories PostCategory[]
+  createdBy  User?          @relation("PostCreator", fields: [createdById], references: [id])
+  updatedBy  User?          @relation("PostUpdater", fields: [updatedById], references: [id])
+  deletedBy  User?          @relation("PostDeleter", fields: [deletedById], references: [id])
+
+  @@index([createdById])
+  @@index([updatedById])
+  @@index([deletedById])
+  @@map("posts")
+}
+
+model PostCategory {
+  id         BigInt   @id @default(autoincrement())
+  postId     BigInt   @map("post_id")
+  categoryId BigInt   @map("category_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  post     Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
+  @@index([categoryId])
+  @@map("post_category")
+}

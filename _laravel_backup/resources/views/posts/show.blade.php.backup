@@ -1,0 +1,98 @@
+@extends('layouts.frontend')
+
+@section('title', $post->title)
+
+@section('content')
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Breadcrumb -->
+    <nav class="mb-6">
+        <ol class="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+            <li><a href="{{ route('home') }}" class="hover:text-green-600 dark:hover:text-green-400">Home</a></li>
+            <li>/</li>
+            <li><a href="{{ route('posts.index') }}" class="hover:text-green-600 dark:hover:text-green-400">Warta</a></li>
+            <li>/</li>
+            <li class="text-gray-900 dark:text-white">{{ Str::limit($post->title, 30) }}</li>
+        </ol>
+    </nav>
+
+    <!-- Post Header -->
+    <article class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+        @if($post->cover)
+        <img src="{{ asset('storage/' . $post->cover) }}" alt="{{ $post->title }}" class="w-full h-96 object-cover">
+        @endif
+
+        <div class="p-8">
+            <!-- Categories -->
+            <div class="flex items-center gap-2 mb-4">
+                @foreach($post->categories as $category)
+                <span class="px-3 py-1 text-sm bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full">
+                    {{ $category->title }}
+                </span>
+                @endforeach
+            </div>
+
+            <!-- Title -->
+            <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">{{ $post->title }}</h1>
+
+            <!-- Meta -->
+            <div class="flex items-center text-gray-600 dark:text-gray-400 text-sm mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
+                <span>📅 {{ $post->published_at->format('d F Y') }}</span>
+                <span class="mx-2">•</span>
+                <span>⏱️ {{ $post->published_at->diffForHumans() }}</span>
+            </div>
+
+            <!-- Excerpt -->
+            @if($post->excerpt)
+            <div class="text-xl text-gray-700 dark:text-gray-300 italic mb-8 pl-4 border-l-4 border-green-500">
+                {{ $post->excerpt }}
+            </div>
+            @endif
+
+            <!-- Content -->
+            <div class="prose prose-lg dark:prose-invert max-w-none">
+                {!! $post->content !!}
+            </div>
+
+            <!-- Share -->
+            <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+                <div class="flex items-center justify-between">
+                    <a href="{{ route('posts.index') }}" class="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-medium">
+                        ← Kembali ke Daftar Warta
+                    </a>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <!-- Related Posts -->
+    @if($relatedPosts->isNotEmpty())
+    <div class="mt-12">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Warta Terkait</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            @foreach($relatedPosts as $related)
+            <article class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden hover:shadow-lg transition-shadow">
+                @if($related->cover)
+                <a href="{{ route('posts.show', $related->slug) }}">
+                    <img src="{{ asset('storage/' . $related->cover) }}" alt="{{ $related->title }}" class="w-full h-40 object-cover">
+                </a>
+                @else
+                <div class="w-full h-40 bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
+                    <span class="text-4xl">📰</span>
+                </div>
+                @endif
+
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 hover:text-green-600 dark:hover:text-green-400">
+                        <a href="{{ route('posts.show', $related->slug) }}">{{ $related->title }}</a>
+                    </h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        {{ $related->published_at->format('d M Y') }}
+                    </p>
+                </div>
+            </article>
+            @endforeach
+        </div>
+    </div>
+    @endif
+</div>
+@endsection
