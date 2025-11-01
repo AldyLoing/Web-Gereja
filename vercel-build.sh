@@ -1,19 +1,29 @@
 #!/bin/bash
-# Vercel Build Script for Laravel
 
-echo "Installing Composer dependencies..."
-composer install --no-dev --optimize-autoloader
+echo "🚀 Starting Vercel build for Laravel..."
 
-echo "Setting up Laravel..."
-php artisan config:clear
-php artisan route:clear
-php artisan view:clear
+# Install Composer dependencies
+echo "📦 Installing Composer dependencies..."
+composer install --no-dev --optimize-autoloader --no-interaction
 
-echo "Creating required directories..."
-mkdir -p /tmp/storage/framework/{sessions,views,cache}
-mkdir -p /tmp/storage/logs
+# Create necessary directories
+echo "📁 Creating storage directories..."
+mkdir -p storage/framework/{sessions,views,cache}
+mkdir -p storage/logs
+mkdir -p bootstrap/cache
 
-echo "Setting permissions..."
-chmod -R 777 /tmp/storage
+# Set permissions
+echo "🔐 Setting permissions..."
+chmod -R 755 storage bootstrap/cache
 
-echo "Build completed successfully!"
+# Clear Laravel caches
+echo "🧹 Clearing caches..."
+php artisan config:clear || true
+php artisan route:clear || true
+php artisan view:clear || true
+
+# Build frontend assets
+echo "🎨 Building frontend assets..."
+npm run build
+
+echo "✅ Build completed successfully!"

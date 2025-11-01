@@ -4,7 +4,7 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
-        "vercel-build": "echo 'No build step needed for PHP runtime'"
+        "vercel-build": "vite build"
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.7",

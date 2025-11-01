@@ -5,7 +5,9 @@
 /storage/framework/sessions
 /storage/framework/testing
 /storage/framework/views
+/.env
 /.env.backup
+/.env.production
 /.phpunit.result.cache
 /npm-debug.log
 /yarn-error.log
@@ -13,4 +15,6 @@
 /.git
 /.github
 /public/hot
-/public/storage
+/docs
+/*.md
+!README.md
