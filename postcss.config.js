@@ -1,7 +1,6 @@
-export default {
-    presets: [],
+module.exports = {
     plugins: {
         tailwindcss: {},
         autoprefixer: {},
     },
-};
+}

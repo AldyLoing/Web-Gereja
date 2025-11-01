@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 export function Footer() {
   const currentYear = new Date().getFullYear()
 
@@ -22,19 +24,19 @@ export function Footer() {
             </h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="/" className="text-gray-600 dark:text-gray-400 hover:text-church-green dark:hover:text-church-green transition-colors">
+                <Link href="/" className="text-gray-600 dark:text-gray-400 hover:text-church-green dark:hover:text-church-green transition-colors">
                   Beranda
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/posts" className="text-gray-600 dark:text-gray-400 hover:text-church-green dark:hover:text-church-green transition-colors">
+                <Link href="/posts" className="text-gray-600 dark:text-gray-400 hover:text-church-green dark:hover:text-church-green transition-colors">
                   Warta
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/login" className="text-gray-600 dark:text-gray-400 hover:text-church-green dark:hover:text-church-green transition-colors">
+                <Link href="/login" className="text-gray-600 dark:text-gray-400 hover:text-church-green dark:hover:text-church-green transition-colors">
                   Login
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
