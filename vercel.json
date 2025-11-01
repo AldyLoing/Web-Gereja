@@ -37,6 +37,7 @@
     "QUEUE_CONNECTION": "sync",
     "VIEW_COMPILED_PATH": "/tmp/storage/framework/views",
     "CACHE_STORE": "array",
-    "SESSION_SECURE_COOKIE": "true"
+    "SESSION_SECURE_COOKIE": "true",
+    "DATABASE_URL": "postgresql://postgres:[YOUR_PASSWORD]@db.pcfvuqqrewqprprfqoua.supabase.co:5432/postgres"
   }
 }
