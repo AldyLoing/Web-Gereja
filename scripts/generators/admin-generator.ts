@@ -1,18 +1,85 @@
-'use client';
+/**
+ * 📝 ADMIN CRUD PAGES GENERATOR
+ * Auto-generates admin pages with DataTables for all models
+ */
+
+import * as fs from 'fs';
+import * as path from 'path';
+
+const modelConfigs = {
+  Member: {
+    route: 'members',
+    title: 'Data Jemaat',
+    icon: 'Users',
+    columns: ['nik', 'fullName', 'gender', 'phone', 'family', 'churchGroups']
+  },
+  Family: {
+    route: 'families',
+    title: 'Data Keluarga',
+    icon: 'Home',
+    columns: ['familyHead', 'address', 'phone', 'totalMember']
+  },
+  ChurchGroup: {
+    route: 'church-groups',
+    title: 'Kelompok Gereja',
+    icon: 'Users2',
+    columns: ['name', 'description', 'membersCount']
+  },
+  Baptism: {
+    route: 'baptisms',
+    title: 'Data Baptisan',
+    icon: 'Droplet',
+    columns: ['member', 'baptismDate', 'baptismPlace', 'minister']
+  },
+  Post: {
+    route: 'posts',
+    title: 'Kelola Warta',
+    icon: 'FileText',
+    columns: ['title', 'categories', 'publishedAt', 'isActive']
+  },
+  Category: {
+    route: 'categories',
+    title: 'Kategori Warta',
+    icon: 'Tag',
+    columns: ['title', 'slug', 'postsCount']
+  }
+};
+
+export async function generateAdminPages(models: string[], projectRoot: string) {
+  for (const model of models) {
+    if (model === 'User') continue;
+    
+    const config = modelConfigs[model as keyof typeof modelConfigs];
+    if (!config) continue;
+
+    await generateAdminPageFile(model, config, projectRoot);
+  }
+}
+
+function generateAdminPageFile(model: string, config: any, projectRoot: string) {
+  const pageDir = path.join(projectRoot, 'app', 'admin', config.route);
+  fs.mkdirSync(pageDir, { recursive: true });
+
+  const pageContent = generatePageContent(model, config);
+  fs.writeFileSync(path.join(pageDir, 'page.tsx'), pageContent);
+}
+
+function generatePageContent(model: string, config: any): string {
+  return `'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, Search, Edit, Trash2, Droplet } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, ${config.icon} } from 'lucide-react';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
 
-interface Baptism {
+interface ${model} {
   id: string;
   [key: string]: any;
 }
 
-export default function BaptismAdminPage() {
-  const [data, setData] = useState<Baptism[]>([]);
+export default function ${model}AdminPage() {
+  const [data, setData] = useState<${model}[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -31,7 +98,7 @@ export default function BaptismAdminPage() {
         ...(searchQuery && { search: searchQuery })
       });
 
-      const response = await fetch(`/api/baptisms?${params}`);
+      const response = await fetch(\`/api/${config.route}?\${params}\`);
       const result = await response.json();
 
       setData(result.data || []);
@@ -47,7 +114,7 @@ export default function BaptismAdminPage() {
     if (!confirm('Apakah Anda yakin ingin menghapus data ini?')) return;
 
     try {
-      const response = await fetch(`/api/baptisms/${id}`, {
+      const response = await fetch(\`/api/${config.route}/\${id}\`, {
         method: 'DELETE'
       });
 
@@ -67,21 +134,21 @@ export default function BaptismAdminPage() {
           <div>
             <div className="flex items-center gap-3">
               <div className="p-3 bg-church-green rounded-xl">
-                <Droplet className="w-6 h-6 text-white" />
+                <${config.icon} className="w-6 h-6 text-white" />
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                  Data Baptisan
+                  ${config.title}
                 </h1>
                 <p className="text-gray-600 dark:text-gray-400 mt-1">
-                  Kelola data baptisan gereja
+                  Kelola ${config.title.toLowerCase()} gereja
                 </p>
               </div>
             </div>
           </div>
 
           <Link
-            href={`/admin/baptisms/create`}
+            href={\`/admin/${config.route}/create\`}
             className="flex items-center gap-2 px-6 py-3 bg-church-green hover:bg-church-green-dark text-white rounded-xl transition-all shadow-lg hover:shadow-xl"
           >
             <Plus className="w-5 h-5" />
@@ -111,7 +178,7 @@ export default function BaptismAdminPage() {
             </div>
           ) : data.length === 0 ? (
             <div className="text-center py-12">
-              <Droplet className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <${config.icon} className="w-16 h-16 text-gray-300 mx-auto mb-4" />
               <p className="text-gray-500 dark:text-gray-400 text-lg">
                 Belum ada data
               </p>
@@ -125,19 +192,10 @@ export default function BaptismAdminPage() {
                       <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                         No
                       </th>
-                      
+                      ${config.columns.map((col: string) => `
                       <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                        member
-                      </th>
-                      <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                        baptism Date
-                      </th>
-                      <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                        baptism Place
-                      </th>
-                      <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                        minister
-                      </th>
+                        ${col.replace(/([A-Z])/g, ' $1').trim()}
+                      </th>`).join('')}
                       <th className="px-6 py-4 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                         Aksi
                       </th>
@@ -152,23 +210,14 @@ export default function BaptismAdminPage() {
                         <td className="px-6 py-4 text-sm text-gray-900 dark:text-white">
                           {(currentPage - 1) * 10 + index + 1}
                         </td>
-                        
+                        ${config.columns.map((col: string) => `
                         <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
-                          {item.member || '-'}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
-                          {item.baptismDate || '-'}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
-                          {item.baptismPlace || '-'}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
-                          {item.minister || '-'}
-                        </td>
+                          {item.${col} || '-'}
+                        </td>`).join('')}
                         <td className="px-6 py-4 text-right">
                           <div className="flex justify-end gap-2">
                             <Link
-                              href={`/admin/baptisms/${item.id}/edit`}
+                              href={\`/admin/${config.route}/\${item.id}/edit\`}
                               className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
                             >
                               <Edit className="w-4 h-4" />
@@ -215,4 +264,6 @@ export default function BaptismAdminPage() {
       </div>
     </div>
   );
+}
+`;
 }

@@ -1,4 +1,33 @@
-'use client';
+/**
+ * 📊 DASHBOARD GENERATOR
+ * Auto-generates dashboard with statistics and charts
+ */
+
+import * as fs from 'fs';
+import * as path from 'path';
+
+export async function generateDashboard(projectRoot: string) {
+  // Generate dashboard page
+  const dashboardDir = path.join(projectRoot, 'app', 'admin', 'dashboard');
+  fs.mkdirSync(dashboardDir, { recursive: true });
+  fs.writeFileSync(path.join(dashboardDir, 'page.tsx'), generateDashboardPage());
+
+  // Generate dashboard actions
+  const actionsDir = path.join(projectRoot, 'app', 'actions');
+  fs.mkdirSync(actionsDir, { recursive: true });
+  fs.writeFileSync(path.join(actionsDir, 'dashboard.ts'), generateDashboardActions());
+
+  // Generate StatCard component
+  const componentsDir = path.join(projectRoot, 'components', 'dashboard');
+  fs.mkdirSync(componentsDir, { recursive: true });
+  fs.writeFileSync(path.join(componentsDir, 'StatCard.tsx'), generateStatCard());
+
+  // Generate ChartGroup component
+  fs.writeFileSync(path.join(componentsDir, 'ChartGroup.tsx'), generateChartGroup());
+}
+
+function generateDashboardPage(): string {
+  return `'use client';
 
 import { useEffect, useState } from 'react';
 import { 
@@ -177,8 +206,8 @@ export default function AdminDashboardPage() {
                 href={link.href}
                 className="flex flex-col items-center gap-3 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl hover:shadow-md transition-all"
               >
-                <div className={`p-3 bg-${link.color}-500/10 rounded-lg`}>
-                  <link.icon className={`w-6 h-6 text-${link.color}-500`} />
+                <div className={\`p-3 bg-\${link.color}-500/10 rounded-lg\`}>
+                  <link.icon className={\`w-6 h-6 text-\${link.color}-500\`} />
                 </div>
                 <span className="text-sm font-medium text-gray-900 dark:text-white text-center">
                   {link.title}
@@ -190,4 +219,191 @@ export default function AdminDashboardPage() {
       </div>
     </div>
   );
+}
+`;
+}
+
+function generateDashboardActions(): string {
+  return `'use server';
+
+import { prisma } from '@/lib/prisma';
+import { startOfMonth, endOfMonth } from 'date-fns';
+
+export async function getDashboardStats() {
+  try {
+    const now = new Date();
+    const monthStart = startOfMonth(now);
+    const monthEnd = endOfMonth(now);
+
+    // Get all stats in parallel
+    const [
+      totalMembers,
+      totalFamilies,
+      totalBaptisms,
+      totalPosts,
+      baptismsThisMonth,
+      birthdaysThisMonth,
+      groupDistribution
+    ] = await Promise.all([
+      // Total members
+      prisma.member.count({ where: { deletedAt: null } }),
+      
+      // Total families
+      prisma.family.count({ where: { deletedAt: null } }),
+      
+      // Total baptisms
+      prisma.baptism.count({ where: { deletedAt: null } }),
+      
+      // Total posts
+      prisma.post.count({ where: { deletedAt: null } }),
+      
+      // Baptisms this month
+      prisma.baptism.count({
+        where: {
+          deletedAt: null,
+          baptismDate: {
+            gte: monthStart,
+            lte: monthEnd
+          }
+        }
+      }),
+      
+      // Birthdays this month
+      prisma.member.count({
+        where: {
+          deletedAt: null,
+          birthDate: {
+            not: null
+          }
+        }
+      }),
+      
+      // Group distribution
+      prisma.churchGroup.findMany({
+        where: { deletedAt: null },
+        include: {
+          _count: {
+            select: { members: true }
+          }
+        }
+      })
+    ]);
+
+    // Format group distribution for charts
+    const groupDistributionData = groupDistribution.map(group => ({
+      name: group.name,
+      count: group._count.members
+    }));
+
+    // Mock recent activity (you can implement proper activity logging)
+    const recentActivity = [
+      { action: 'Jemaat baru ditambahkan', timestamp: 'Baru saja' },
+      { action: 'Data keluarga diperbarui', timestamp: '5 menit lalu' },
+      { action: 'Baptisan baru tercatat', timestamp: '1 jam lalu' },
+      { action: 'Warta baru dipublikasi', timestamp: '2 jam lalu' },
+      { action: 'Kelompok sel diperbarui', timestamp: '3 jam lalu' }
+    ];
+
+    return {
+      totalMembers,
+      totalFamilies,
+      totalBaptisms,
+      totalPosts,
+      baptismsThisMonth,
+      birthdaysThisMonth,
+      groupDistribution: groupDistributionData,
+      recentActivity
+    };
+  } catch (error) {
+    console.error('Error fetching dashboard stats:', error);
+    throw error;
+  }
+}
+`;
+}
+
+function generateStatCard(): string {
+  return `import { LucideIcon } from 'lucide-react';
+
+interface StatCardProps {
+  title: string;
+  value: number;
+  icon: LucideIcon;
+  color: 'green' | 'blue' | 'cyan' | 'purple' | 'orange' | 'pink';
+  trend?: string;
+}
+
+const colorClasses = {
+  green: 'from-green-400 to-emerald-600',
+  blue: 'from-blue-400 to-blue-600',
+  cyan: 'from-cyan-400 to-cyan-600',
+  purple: 'from-purple-400 to-purple-600',
+  orange: 'from-orange-400 to-orange-600',
+  pink: 'from-pink-400 to-pink-600'
+};
+
+export default function StatCard({ title, value, icon: Icon, color, trend }: StatCardProps) {
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md overflow-hidden">
+      <div className={\`bg-gradient-to-br \${colorClasses[color]} p-6 text-white\`}>
+        <div className="flex items-start justify-between">
+          <div>
+            <p className="text-sm font-medium opacity-90 mb-1">{title}</p>
+            <p className="text-4xl font-bold">{value.toLocaleString('id-ID')}</p>
+            {trend && (
+              <p className="text-xs mt-2 opacity-80">
+                {trend} dari bulan lalu
+              </p>
+            )}
+          </div>
+          <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
+            <Icon className="w-8 h-8" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+`;
+}
+
+function generateChartGroup(): string {
+  return `'use client';
+
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+
+interface ChartGroupProps {
+  data: { name: string; count: number }[];
+}
+
+export default function ChartGroup({ data }: ChartGroupProps) {
+  return (
+    <ResponsiveContainer width="100%" height={300}>
+      <BarChart data={data}>
+        <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+        <XAxis 
+          dataKey="name" 
+          tick={{ fill: '#6b7280', fontSize: 12 }}
+          angle={-45}
+          textAnchor="end"
+          height={80}
+        />
+        <YAxis tick={{ fill: '#6b7280', fontSize: 12 }} />
+        <Tooltip 
+          contentStyle={{
+            backgroundColor: '#ffffff',
+            border: '1px solid #e5e7eb',
+            borderRadius: '8px'
+          }}
+        />
+        <Bar 
+          dataKey="count" 
+          fill="#009345" 
+          radius={[8, 8, 0, 0]}
+        />
+      </BarChart>
+    </ResponsiveContainer>
+  );
+}
+`;
 }

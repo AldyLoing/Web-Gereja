@@ -1,18 +1,18 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, Search, Edit, Trash2, Droplet } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, Tag } from 'lucide-react';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
 
-interface Baptism {
+interface Category {
   id: string;
   [key: string]: any;
 }
 
-export default function BaptismAdminPage() {
-  const [data, setData] = useState<Baptism[]>([]);
+export default function CategoryAdminPage() {
+  const [data, setData] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -31,7 +31,7 @@ export default function BaptismAdminPage() {
         ...(searchQuery && { search: searchQuery })
       });
 
-      const response = await fetch(`/api/baptisms?${params}`);
+      const response = await fetch(`/api/categories?${params}`);
       const result = await response.json();
 
       setData(result.data || []);
@@ -47,7 +47,7 @@ export default function BaptismAdminPage() {
     if (!confirm('Apakah Anda yakin ingin menghapus data ini?')) return;
 
     try {
-      const response = await fetch(`/api/baptisms/${id}`, {
+      const response = await fetch(`/api/categories/${id}`, {
         method: 'DELETE'
       });
 
@@ -67,21 +67,21 @@ export default function BaptismAdminPage() {
           <div>
             <div className="flex items-center gap-3">
               <div className="p-3 bg-church-green rounded-xl">
-                <Droplet className="w-6 h-6 text-white" />
+                <Tag className="w-6 h-6 text-white" />
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                  Data Baptisan
+                  Kategori Warta
                 </h1>
                 <p className="text-gray-600 dark:text-gray-400 mt-1">
-                  Kelola data baptisan gereja
+                  Kelola kategori warta gereja
                 </p>
               </div>
             </div>
           </div>
 
           <Link
-            href={`/admin/baptisms/create`}
+            href={`/admin/categories/create`}
             className="flex items-center gap-2 px-6 py-3 bg-church-green hover:bg-church-green-dark text-white rounded-xl transition-all shadow-lg hover:shadow-xl"
           >
             <Plus className="w-5 h-5" />
@@ -111,7 +111,7 @@ export default function BaptismAdminPage() {
             </div>
           ) : data.length === 0 ? (
             <div className="text-center py-12">
-              <Droplet className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <Tag className="w-16 h-16 text-gray-300 mx-auto mb-4" />
               <p className="text-gray-500 dark:text-gray-400 text-lg">
                 Belum ada data
               </p>
@@ -127,16 +127,13 @@ export default function BaptismAdminPage() {
                       </th>
                       
                       <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                        member
+                        title
                       </th>
                       <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                        baptism Date
+                        slug
                       </th>
                       <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                        baptism Place
-                      </th>
-                      <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                        minister
+                        posts Count
                       </th>
                       <th className="px-6 py-4 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                         Aksi
@@ -154,21 +151,18 @@ export default function BaptismAdminPage() {
                         </td>
                         
                         <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
-                          {item.member || '-'}
+                          {item.title || '-'}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
-                          {item.baptismDate || '-'}
+                          {item.slug || '-'}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
-                          {item.baptismPlace || '-'}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
-                          {item.minister || '-'}
+                          {item.postsCount || '-'}
                         </td>
                         <td className="px-6 py-4 text-right">
                           <div className="flex justify-end gap-2">
                             <Link
-                              href={`/admin/baptisms/${item.id}/edit`}
+                              href={`/admin/categories/${item.id}/edit`}
                               className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
                             >
                               <Edit className="w-4 h-4" />

@@ -1,4 +1,15 @@
-import type { Config } from "tailwindcss";
+/**
+ * 🌈 THEME GENERATOR
+ * Updates Tailwind config with church theme colors
+ */
+
+import * as fs from 'fs';
+import * as path from 'path';
+
+export async function updateTailwindConfig(projectRoot: string) {
+  const configPath = path.join(projectRoot, 'tailwind.config.ts');
+  
+  const configContent = `import type { Config } from "tailwindcss";
 
 const config: Config = {
   darkMode: ["class"],
@@ -113,3 +124,7 @@ const config: Config = {
 };
 
 export default config;
+`;
+
+  fs.writeFileSync(configPath, configContent);
+}
