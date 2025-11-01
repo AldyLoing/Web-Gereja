@@ -6,6 +6,7 @@
 /storage/app/public/*
 !/storage/app/public/.gitignore
 .env
+.env.local
 .env.backup
 .env.production
 .phpunit.result.cache
@@ -17,3 +18,5 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+.next/
+.vercel
