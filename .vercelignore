@@ -1,4 +1,3 @@
-/vendor
 /node_modules
 /storage/*.key
 /storage/logs
@@ -10,3 +9,8 @@
 /.phpunit.result.cache
 /npm-debug.log
 /yarn-error.log
+/tests
+/.git
+/.github
+/public/hot
+/public/storage

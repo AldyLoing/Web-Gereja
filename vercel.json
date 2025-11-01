@@ -1,13 +1,29 @@
 {
   "version": 2,
   "builds": [
-    { "src": "api/index.php", "use": "@vercel/php" },
-    { "src": "public/**", "use": "@vercel/static" }
+    {
+      "src": "api/index.php",
+      "use": "vercel-php@0.7.2"
+    }
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "api/index.php" }
+    {
+      "src": "/(css|js|images|fonts)/(.+)",
+      "dest": "/public/$1/$2"
+    },
+    {
+      "src": "/build/(.+)",
+      "dest": "/public/build/$1"
+    },
+    {
+      "src": "/storage/(.+)",
+      "dest": "/public/storage/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/api/index.php"
+    }
   ],
-  "outputDirectory": "public",
   "env": {
     "APP_ENV": "production",
     "APP_DEBUG": "false",
@@ -17,7 +33,6 @@
     "QUEUE_CONNECTION": "sync",
     "VIEW_COMPILED_PATH": "/tmp/storage/framework/views",
     "CACHE_STORE": "array",
-    "SESSION_SECURE_COOKIE": "true",
-    "DATABASE_URL": "postgresql://postgres:[YOUR_PASSWORD]@db.pcfvuqqrewqprprfqoua.supabase.co:5432/postgres"
+    "SESSION_SECURE_COOKIE": "true"
   }
 }
