@@ -161,30 +161,49 @@ export default function AdminDashboardPage() {
         {/* Quick Links */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
-            Akses Cepat
+            Menu Utama
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {[
-              { title: 'Jemaat', href: '/admin/members', icon: Users, color: 'green' },
-              { title: 'Keluarga', href: '/admin/families', icon: Home, color: 'blue' },
-              { title: 'Kelompok', href: '/admin/church-groups', icon: Users2, color: 'purple' },
-              { title: 'Baptisan', href: '/admin/baptisms', icon: Droplet, color: 'cyan' },
-              { title: 'Warta', href: '/admin/posts', icon: FileText, color: 'orange' },
-              { title: 'Ulang Tahun', href: '/admin/birthdays', icon: Calendar, color: 'pink' }
+              { title: 'Data Jemaat', href: '/admin/members', icon: Users },
+              { title: 'Keluarga', href: '/admin/families', icon: Home },
+              { title: 'Kelompok Sel', href: '/admin/church-groups', icon: Users2 },
+              { title: 'Baptisan', href: '/admin/baptisms', icon: Droplet },
+              { title: 'Warta', href: '/admin/posts', icon: FileText },
+              { title: 'Pengaturan', href: '/admin/settings', icon: Calendar }
             ].map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                className="flex flex-col items-center gap-3 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl hover:shadow-md transition-all"
+                className="flex flex-col items-center gap-3 p-6 bg-gray-50 dark:bg-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-600 hover:shadow-lg transition-all group"
               >
-                <div className={`p-3 bg-${link.color}-500/10 rounded-lg`}>
-                  <link.icon className={`w-6 h-6 text-${link.color}-500`} />
+                <div className="p-4 bg-church-green/10 group-hover:bg-church-green rounded-xl transition-colors">
+                  <link.icon className="w-8 h-8 text-church-green group-hover:text-white transition-colors" />
                 </div>
                 <span className="text-sm font-medium text-gray-900 dark:text-white text-center">
                   {link.title}
                 </span>
               </a>
             ))}
+          </div>
+        </div>
+
+        {/* Info Banner */}
+        <div className="mt-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4">
+          <div className="flex items-start gap-3">
+            <div className="p-2 bg-blue-100 dark:bg-blue-900/40 rounded-lg">
+              <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div className="flex-1">
+              <h3 className="text-sm font-semibold text-blue-900 dark:text-blue-200 mb-1">
+                Fitur dalam pengembangan
+              </h3>
+              <p className="text-sm text-blue-700 dark:text-blue-300">
+                Dashboard ini adalah versi demo. Fitur-fitur lengkap seperti CRUD data jemaat, manajemen keluarga, kelompok sel, dan warta sedang dalam pengembangan.
+              </p>
+            </div>
           </div>
         </div>
       </div>
