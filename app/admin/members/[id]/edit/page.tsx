@@ -296,7 +296,7 @@ export default function EditMemberPage({ params }: { params: Promise<{ id: strin
               >
                 <option value="">-- Pilih Keluarga (Opsional) --</option>
                 {families.map(family => (
-                  <option key={family.id} value={family.id}>{family.headOfFamily}</option>
+                  <option key={family.id} value={family.id}>{family.familyHead}</option>
                 ))}
               </select>
             </div>

@@ -9,7 +9,7 @@ export default function EditFamilyPage({ params }: { params: Promise<{ id: strin
   const router = useRouter();
   const [id, setId] = useState<string>('');
   const [formData, setFormData] = useState({
-    headOfFamily: '',
+    familyHead: '',
     address: ''
   });
   const [loading, setLoading] = useState(false);
@@ -28,7 +28,7 @@ export default function EditFamilyPage({ params }: { params: Promise<{ id: strin
       if (response.ok) {
         const data = await response.json();
         setFormData({
-          headOfFamily: data.headOfFamily || '',
+          familyHead: data.familyHead || '',
           address: data.address || ''
         });
       }
@@ -97,8 +97,8 @@ export default function EditFamilyPage({ params }: { params: Promise<{ id: strin
               <input
                 type="text"
                 required
-                value={formData.headOfFamily}
-                onChange={(e) => setFormData({ ...formData, headOfFamily: e.target.value })}
+                value={formData.familyHead}
+                onChange={(e) => setFormData({ ...formData, familyHead: e.target.value })}
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-church-green focus:border-transparent"
                 placeholder="Nama kepala keluarga"
               />

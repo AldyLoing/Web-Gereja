@@ -7,7 +7,7 @@ import Link from 'next/link';
 
 interface Family {
   id: string;
-  headOfFamily: string;
+  familyHead: string;
 }
 
 interface ChurchGroup {
@@ -328,7 +328,7 @@ export default function CreateMemberPage() {
                   <option value="">-- Pilih Keluarga (Opsional) --</option>
                   {families.map(family => (
                     <option key={family.id} value={family.id}>
-                      {family.headOfFamily}
+                      {family.familyHead}
                     </option>
                   ))}
                 </select>

@@ -58,12 +58,13 @@ export async function POST(request: NextRequest) {
     
     // Validate and clean data
     const cleanData: any = {
-      headOfFamily: body.headOfFamily,
+      familyHead: body.familyHead,
       createdBy: session.user.id
     };
     
     // Optional fields
     if (body.address) cleanData.address = body.address;
+    if (body.phone) cleanData.phone = body.phone;
     
     console.log('Clean data for Prisma:', JSON.stringify(cleanData, null, 2));
     

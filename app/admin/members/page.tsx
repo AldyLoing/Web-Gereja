@@ -171,8 +171,8 @@ export default function MemberAdminPage() {
                         <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
                           {item.phone || '-'}
                         </td>
-                        <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
-                          {item.family?.headOfFamily || '-'}
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                          {item.family?.familyHead || '-'}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
                           {Array.isArray(item.churchGroups) && item.churchGroups.length > 0 
