@@ -55,9 +55,13 @@ export async function getDashboardStats() {
       // Group distribution
       prisma.churchGroup.findMany({
         where: { deletedAt: null },
-        include: {
-          _count: {
-            select: { members: true }
+        select: {
+          id: true,
+          name: true,
+          members: {
+            select: {
+              id: true
+            }
           }
         }
       })
@@ -66,7 +70,7 @@ export async function getDashboardStats() {
     // Format group distribution for charts
     const groupDistributionData = groupDistribution.map(group => ({
       name: group.name,
-      count: group._count.members
+      count: group.members?.length || 0
     }));
 
     // Mock recent activity (you can implement proper activity logging)
@@ -88,8 +92,19 @@ export async function getDashboardStats() {
       groupDistribution: groupDistributionData,
       recentActivity
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error fetching dashboard stats:', error);
-    throw error;
+    
+    // Return default values on error instead of throwing
+    return {
+      totalMembers: 0,
+      totalFamilies: 0,
+      totalBaptisms: 0,
+      totalPosts: 0,
+      baptismsThisMonth: 0,
+      birthdaysThisMonth: 0,
+      groupDistribution: [],
+      recentActivity: []
+    };
   }
 }
