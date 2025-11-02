@@ -31,11 +31,14 @@ export default function MemberAdminPage() {
         ...(searchQuery && { search: searchQuery })
       });
 
+      console.log('Fetching members with params:', params.toString());
       const response = await fetch(`/api/members?${params}`);
       const result = await response.json();
+      console.log('Received data:', result);
 
       setData(result.data || []);
       setTotalPages(result.meta?.totalPages || 1);
+      console.log('Data set to state:', result.data?.length || 0, 'items');
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
