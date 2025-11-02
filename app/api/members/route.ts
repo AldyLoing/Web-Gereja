@@ -19,7 +19,15 @@ export async function GET(request: NextRequest) {
     const [data, total] = await Promise.all([
       prisma.member.findMany({
         where: { deletedAt: null },
-        include: { family: true, churchGroups: true, baptism: true },
+        include: { 
+          family: true, 
+          churchGroups: {
+            include: {
+              churchGroup: true
+            }
+          }, 
+          baptism: true 
+        },
         skip,
         take: limit,
         orderBy: { createdAt: 'desc' }
