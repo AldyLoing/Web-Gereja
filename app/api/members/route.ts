@@ -18,27 +18,60 @@ export async function GET(request: NextRequest) {
 
     console.log('Fetching members - page:', page, 'limit:', limit);
 
-    let data, total;
+    let data: any[] = [];
+    let total = 0;
     
+    // Try simpler query first
     try {
-      [data, total] = await Promise.all([
-        prisma.member.findMany({
-          where: { deletedAt: null },
-          include: { 
-            family: true, 
-            churchGroups: {
-              include: {
-                churchGroup: true
-              }
-            }, 
-            baptism: true 
+      total = await prisma.member.count({ where: { deletedAt: null } });
+      console.log('Total members:', total);
+    } catch (countError: any) {
+      console.error('Error counting members:', countError);
+      throw new Error(`Count error: ${countError.message}`);
+    }
+
+    try {
+      data = await prisma.member.findMany({
+        where: { deletedAt: null },
+        select: {
+          id: true,
+          nik: true,
+          fullName: true,
+          gender: true,
+          phone: true,
+          email: true,
+          birthDate: true,
+          address: true,
+          maritalStatus: true,
+          createdAt: true,
+          family: {
+            select: {
+              id: true,
+              familyHead: true
+            }
           },
-          skip,
-          take: limit,
-          orderBy: { createdAt: 'desc' }
-        }),
-        prisma.member.count({ where: { deletedAt: null } })
-      ]);
+          churchGroups: {
+            select: {
+              id: true,
+              churchGroup: {
+                select: {
+                  id: true,
+                  name: true
+                }
+              }
+            }
+          },
+          baptism: {
+            select: {
+              id: true,
+              baptismDate: true
+            }
+          }
+        },
+        skip,
+        take: limit,
+        orderBy: { createdAt: 'desc' }
+      });
       
       console.log('Successfully fetched members:', data.length);
     } catch (dbError: any) {
