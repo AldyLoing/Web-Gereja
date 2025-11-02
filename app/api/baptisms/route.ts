@@ -54,20 +54,46 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
+    console.log('Received body:', JSON.stringify(body, null, 2));
+    
+    // Validate and clean data
+    const cleanData: any = {
+      memberId: body.memberId,
+      baptismDate: new Date(body.baptismDate),
+      minister: body.minister,
+      createdBy: session.user.id
+    };
+    
+    // Optional fields
+    if (body.baptismPlace) cleanData.baptismPlace = body.baptismPlace;
+    if (body.certificate) cleanData.certificate = body.certificate;
+    
+    console.log('Clean data for Prisma:', JSON.stringify(cleanData, null, 2));
     
     const baptism = await prisma.baptism.create({
-      data: {
-        ...body,
-        createdBy: session.user.id
-      },
+      data: cleanData,
       include: { member: true }
     });
 
     return NextResponse.json(baptism, { status: 201 });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error creating Baptism:', error);
+    
+    let errorMessage = error.message || 'Failed to create Baptism';
+    
+    if (error.message?.includes('Can\'t reach database server')) {
+      errorMessage = 'Database connection error. Please check DATABASE_URL configuration.';
+    } else if (error.code === 'P2002') {
+      errorMessage = 'Jemaat ini sudah memiliki data baptisan.';
+    } else if (error.code === 'P2003') {
+      errorMessage = 'Jemaat tidak ditemukan.';
+    }
+    
     return NextResponse.json(
-      { error: 'Failed to create Baptism' },
+      { 
+        error: errorMessage,
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined 
+      },
       { status: 500 }
     );
   }
