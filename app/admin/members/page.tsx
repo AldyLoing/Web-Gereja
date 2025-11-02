@@ -175,8 +175,8 @@ export default function MemberAdminPage() {
                           {item.family?.headOfFamily || '-'}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
-                          {item.churchGroups?.length > 0 
-                            ? item.churchGroups.map((cg: any) => cg.churchGroup.name).join(', ')
+                          {Array.isArray(item.churchGroups) && item.churchGroups.length > 0 
+                            ? item.churchGroups.map((cg: any) => cg.churchGroup?.name || '').filter(Boolean).join(', ') || '-'
                             : '-'}
                         </td>
                         <td className="px-6 py-4 text-right">
