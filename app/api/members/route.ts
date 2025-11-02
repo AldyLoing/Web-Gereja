@@ -16,24 +16,35 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '10');
     const skip = (page - 1) * limit;
 
-    const [data, total] = await Promise.all([
-      prisma.member.findMany({
-        where: { deletedAt: null },
-        include: { 
-          family: true, 
-          churchGroups: {
-            include: {
-              churchGroup: true
-            }
-          }, 
-          baptism: true 
-        },
-        skip,
-        take: limit,
-        orderBy: { createdAt: 'desc' }
-      }),
-      prisma.member.count({ where: { deletedAt: null } })
-    ]);
+    console.log('Fetching members - page:', page, 'limit:', limit);
+
+    let data, total;
+    
+    try {
+      [data, total] = await Promise.all([
+        prisma.member.findMany({
+          where: { deletedAt: null },
+          include: { 
+            family: true, 
+            churchGroups: {
+              include: {
+                churchGroup: true
+              }
+            }, 
+            baptism: true 
+          },
+          skip,
+          take: limit,
+          orderBy: { createdAt: 'desc' }
+        }),
+        prisma.member.count({ where: { deletedAt: null } })
+      ]);
+      
+      console.log('Successfully fetched members:', data.length);
+    } catch (dbError: any) {
+      console.error('Database query error:', dbError);
+      throw new Error(`Database error: ${dbError.message}`);
+    }
 
     return NextResponse.json({
       data,
@@ -44,10 +55,20 @@ export async function GET(request: NextRequest) {
         totalPages: Math.ceil(total / limit)
       }
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error fetching Members:', error);
+    
+    let errorMessage = 'Failed to fetch Members';
+    if (error.message) {
+      console.error('Detailed error:', error.message);
+      errorMessage = error.message;
+    }
+    
     return NextResponse.json(
-      { error: 'Failed to fetch Members' },
+      { 
+        error: errorMessage,
+        details: process.env.NODE_ENV === 'development' ? error.stack : undefined 
+      },
       { status: 500 }
     );
   }
