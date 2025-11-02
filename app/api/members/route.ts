@@ -90,8 +90,23 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(member, { status: 201 });
   } catch (error: any) {
     console.error('Error creating Member:', error);
+    
+    // Better error message for database connection issues
+    let errorMessage = error.message || 'Failed to create Member';
+    
+    if (error.message?.includes('Can\'t reach database server')) {
+      errorMessage = 'Database connection error. Please check DATABASE_URL configuration.';
+    } else if (error.code === 'P2002') {
+      errorMessage = 'NIK sudah terdaftar. Silakan gunakan NIK yang berbeda.';
+    } else if (error.code === 'P2003') {
+      errorMessage = 'Data keluarga atau kelompok sel tidak valid.';
+    }
+    
     return NextResponse.json(
-      { error: error.message || 'Failed to create Member' },
+      { 
+        error: errorMessage,
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined 
+      },
       { status: 500 }
     );
   }
