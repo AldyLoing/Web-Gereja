@@ -62,20 +62,42 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
+    console.log('Received body:', JSON.stringify(body, null, 2));
+    
     const { churchGroupIds, ...memberData } = body;
+    
+    // Validate and clean data
+    const cleanData: any = {
+      nik: memberData.nik,
+      fullName: memberData.fullName,
+      gender: memberData.gender,
+      maritalStatus: memberData.maritalStatus || 'SINGLE',
+      createdBy: session.user.id
+    };
+    
+    // Optional fields
+    if (memberData.kk) cleanData.kk = memberData.kk;
+    if (memberData.birthPlace) cleanData.birthPlace = memberData.birthPlace;
+    if (memberData.birthDate) cleanData.birthDate = new Date(memberData.birthDate);
+    if (memberData.phone) cleanData.phone = memberData.phone;
+    if (memberData.email) cleanData.email = memberData.email;
+    if (memberData.address) cleanData.address = memberData.address;
+    if (memberData.familyId) cleanData.familyId = memberData.familyId;
+    
+    // Add church group relations
+    if (churchGroupIds && churchGroupIds.length > 0) {
+      cleanData.churchGroups = {
+        create: churchGroupIds.map((groupId: string) => ({
+          churchGroupId: groupId
+        }))
+      };
+    }
+    
+    console.log('Clean data for Prisma:', JSON.stringify(cleanData, null, 2));
     
     // Create member with church group relations
     const member = await prisma.member.create({
-      data: {
-        ...memberData,
-        createdBy: session.user.id,
-        // Create church group relations if provided
-        churchGroups: churchGroupIds && churchGroupIds.length > 0 ? {
-          create: churchGroupIds.map((groupId: string) => ({
-            churchGroupId: groupId
-          }))
-        } : undefined
-      },
+      data: cleanData,
       include: { 
         family: true, 
         churchGroups: {
