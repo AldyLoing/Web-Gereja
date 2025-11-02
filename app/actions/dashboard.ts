@@ -52,25 +52,24 @@ export async function getDashboardStats() {
         }
       }),
       
-      // Group distribution
-      prisma.churchGroup.findMany({
-        where: { deletedAt: null },
-        select: {
-          id: true,
-          name: true,
-          members: {
-            select: {
-              id: true
-            }
-          }
-        }
-      })
+      // Group distribution - count members per group
+      prisma.$queryRaw`
+        SELECT 
+          cg.id,
+          cg.name,
+          COUNT(mcg."memberId")::int as "memberCount"
+        FROM church_groups cg
+        LEFT JOIN member_church_group mcg ON mcg."churchGroupId" = cg.id
+        WHERE cg."deletedAt" IS NULL
+        GROUP BY cg.id, cg.name
+        ORDER BY cg.name
+      `
     ]);
 
     // Format group distribution for charts
-    const groupDistributionData = groupDistribution.map(group => ({
+    const groupDistributionData = (groupDistribution as any[]).map((group: any) => ({
       name: group.name,
-      count: group.members?.length || 0
+      count: group.memberCount || 0
     }));
 
     // Mock recent activity (you can implement proper activity logging)
