@@ -188,20 +188,20 @@ export default function AdminDashboardPage() {
           </div>
         </div>
 
-        {/* Info Banner */}
-        <div className="mt-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4">
+        {/* Welcome Banner */}
+        <div className="mt-6 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-4">
           <div className="flex items-start gap-3">
-            <div className="p-2 bg-blue-100 dark:bg-blue-900/40 rounded-lg">
-              <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <div className="p-2 bg-green-100 dark:bg-green-900/40 rounded-lg">
+              <svg className="w-5 h-5 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
             <div className="flex-1">
-              <h3 className="text-sm font-semibold text-blue-900 dark:text-blue-200 mb-1">
-                Fitur dalam pengembangan
+              <h3 className="text-sm font-semibold text-green-900 dark:text-green-200 mb-1">
+                Sistem Siap Digunakan
               </h3>
-              <p className="text-sm text-blue-700 dark:text-blue-300">
-                Dashboard ini adalah versi demo. Fitur-fitur lengkap seperti CRUD data jemaat, manajemen keluarga, kelompok sel, dan warta sedang dalam pengembangan.
+              <p className="text-sm text-green-700 dark:text-green-300">
+                Semua fitur sudah aktif: Kelola data jemaat, keluarga, kelompok sel, baptisan, dan warta gereja. Selamat menggunakan!
               </p>
             </div>
           </div>
