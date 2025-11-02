@@ -1,9 +1,15 @@
 'use client'
 
 import { useState } from 'react'
+import { signIn } from 'next-auth/react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
 export default function LoginPage() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const callbackUrl = searchParams.get('callbackUrl') || '/admin/dashboard'
+  
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [remember, setRemember] = useState(false)
@@ -16,11 +22,18 @@ export default function LoginPage() {
     setError('')
 
     try {
-      // TODO: Implement actual authentication
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      // Temporary demo - redirect to admin dashboard
-      window.location.href = '/admin/dashboard'
+      const result = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      })
+
+      if (result?.error) {
+        setError('Email atau password salah. Silakan coba lagi.')
+      } else if (result?.ok) {
+        router.push(callbackUrl)
+        router.refresh()
+      }
     } catch (err) {
       setError('Login gagal. Silakan coba lagi.')
     } finally {
@@ -140,11 +153,11 @@ export default function LoginPage() {
               🔒 Demo Credentials:
             </p>
             <p className="text-xs text-blue-700 dark:text-blue-400">
-              Email: admin@webgereja.id<br />
-              Password: password
+              Email: admin@gereja.com<br />
+              Password: admin123
             </p>
             <p className="text-xs text-blue-600 dark:text-blue-500 mt-2 italic">
-              (Authentication belum diimplementasi, semua login akan diterima)
+              (Login dengan akun admin yang sudah dibuat di database)
             </p>
           </div>
         </div>

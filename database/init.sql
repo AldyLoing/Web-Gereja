@@ -268,7 +268,7 @@ VALUES (
     gen_random_uuid()::TEXT,
     'Administrator',
     'admin@gereja.com',
-    '$2a$10$rZ5YxJ5h5fKL7KLxW5Y8.eX5F8WxYqN9Y8.eX5F8WxYqN9Y8.eX5F8',
+    '$2b$10$saSx9.mS3Q4fKbeLJYJIRe56zmZ.oX21jAtzvb3WliaQ8BDqAFFIC',
     'ADMIN',
     CURRENT_TIMESTAMP,
     CURRENT_TIMESTAMP
