@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useSession, signOut } from 'next-auth/react'
 
 export function Navbar() {
+  const { data: session, status } = useSession()
   const [darkMode, setDarkMode] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
@@ -17,6 +19,10 @@ export function Navbar() {
       document.documentElement.classList.add('dark')
     }
   }, [])
+
+  const handleLogout = async () => {
+    await signOut({ callbackUrl: '/login' })
+  }
 
   const toggleDarkMode = () => {
     const newMode = !darkMode
@@ -100,9 +106,23 @@ export function Navbar() {
             <Link href="/posts" className="px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-church-green hover:text-white transition-all duration-200">
               Warta
             </Link>
-            <Link href="/login" className="px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-church-green hover:text-white transition-all duration-200">
-              Login
-            </Link>
+            {session ? (
+              <>
+                <Link href="/admin/dashboard" className="px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-church-green hover:text-white transition-all duration-200">
+                  Dashboard
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-red-500 hover:text-white transition-all duration-200"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <Link href="/login" className="px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-church-green hover:text-white transition-all duration-200">
+                Login
+              </Link>
+            )}
           </div>
 
           {/* Dark Mode Toggle */}
@@ -144,9 +164,23 @@ export function Navbar() {
             <Link href="/posts" className="block px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-church-green hover:text-white transition-colors">
               Warta
             </Link>
-            <Link href="/login" className="block px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-church-green hover:text-white transition-colors">
-              Login
-            </Link>
+            {session ? (
+              <>
+                <Link href="/admin/dashboard" className="block px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-church-green hover:text-white transition-colors">
+                  Dashboard
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-red-500 hover:text-white transition-colors"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <Link href="/login" className="block px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-church-green hover:text-white transition-colors">
+                Login
+              </Link>
+            )}
           </div>
         </div>
       )}
