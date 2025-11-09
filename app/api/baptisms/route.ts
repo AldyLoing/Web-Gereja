@@ -16,16 +16,46 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '10');
     const skip = (page - 1) * limit;
 
-    const [data, total] = await Promise.all([
-      prisma.baptism.findMany({
+    console.log('Fetching baptisms - page:', page, 'limit:', limit);
+
+    let data: any[] = [];
+    let total = 0;
+    
+    try {
+      total = await prisma.baptism.count({ where: { deletedAt: null } });
+      console.log('Total baptisms:', total);
+    } catch (countError: any) {
+      console.error('Error counting baptisms:', countError);
+      return NextResponse.json({ error: `Count error: ${countError.message}` }, { status: 500 });
+    }
+
+    try {
+      data = await prisma.baptism.findMany({
         where: { deletedAt: null },
-        include: { member: true },
+        select: {
+          id: true,
+          baptismDate: true,
+          baptismPlace: true,
+          minister: true,
+          certificate: true,
+          createdAt: true,
+          updatedAt: true,
+          member: {
+            select: {
+              id: true,
+              fullName: true
+            }
+          }
+        },
         skip,
         take: limit,
         orderBy: { createdAt: 'desc' }
-      }),
-      prisma.baptism.count({ where: { deletedAt: null } })
-    ]);
+      });
+      console.log('Baptisms fetched:', data.length);
+    } catch (fetchError: any) {
+      console.error('Error fetching baptisms:', fetchError);
+      return NextResponse.json({ error: `Fetch error: ${fetchError.message}` }, { status: 500 });
+    }
 
     return NextResponse.json({
       data,
@@ -36,10 +66,10 @@ export async function GET(request: NextRequest) {
         totalPages: Math.ceil(total / limit)
       }
     });
-  } catch (error) {
-    console.error('Error fetching Baptisms:', error);
+  } catch (error: any) {
+    console.error('Error in baptisms API:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch Baptisms' },
+      { error: `Failed to fetch Baptisms: ${error.message}` },
       { status: 500 }
     );
   }

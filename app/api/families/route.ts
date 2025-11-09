@@ -16,16 +16,44 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '10');
     const skip = (page - 1) * limit;
 
-    const [data, total] = await Promise.all([
-      prisma.family.findMany({
+    console.log('Fetching families - page:', page, 'limit:', limit);
+
+    let data: any[] = [];
+    let total = 0;
+    
+    try {
+      total = await prisma.family.count({ where: { deletedAt: null } });
+      console.log('Total families:', total);
+    } catch (countError: any) {
+      console.error('Error counting families:', countError);
+      return NextResponse.json({ error: `Count error: ${countError.message}` }, { status: 500 });
+    }
+
+    try {
+      data = await prisma.family.findMany({
         where: { deletedAt: null },
-        include: { members: true },
+        select: {
+          id: true,
+          familyHead: true,
+          address: true,
+          createdAt: true,
+          updatedAt: true,
+          members: {
+            select: {
+              id: true,
+              fullName: true
+            }
+          }
+        },
         skip,
         take: limit,
         orderBy: { createdAt: 'desc' }
-      }),
-      prisma.family.count({ where: { deletedAt: null } })
-    ]);
+      });
+      console.log('Families fetched:', data.length);
+    } catch (fetchError: any) {
+      console.error('Error fetching families:', fetchError);
+      return NextResponse.json({ error: `Fetch error: ${fetchError.message}` }, { status: 500 });
+    }
 
     return NextResponse.json({
       data,
@@ -36,10 +64,10 @@ export async function GET(request: NextRequest) {
         totalPages: Math.ceil(total / limit)
       }
     });
-  } catch (error) {
-    console.error('Error fetching Familys:', error);
+  } catch (error: any) {
+    console.error('Error in families API:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch Familys' },
+      { error: `Failed to fetch Familys: ${error.message}` },
       { status: 500 }
     );
   }

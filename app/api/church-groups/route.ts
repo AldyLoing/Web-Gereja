@@ -16,16 +16,49 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '10');
     const skip = (page - 1) * limit;
 
-    const [data, total] = await Promise.all([
-      prisma.churchGroup.findMany({
+    console.log('Fetching church groups - page:', page, 'limit:', limit);
+
+    let data: any[] = [];
+    let total = 0;
+    
+    try {
+      total = await prisma.churchGroup.count({ where: { deletedAt: null } });
+      console.log('Total church groups:', total);
+    } catch (countError: any) {
+      console.error('Error counting church groups:', countError);
+      return NextResponse.json({ error: `Count error: ${countError.message}` }, { status: 500 });
+    }
+
+    try {
+      data = await prisma.churchGroup.findMany({
         where: { deletedAt: null },
-        include: { members: true },
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          createdAt: true,
+          updatedAt: true,
+          members: {
+            select: {
+              memberId: true,
+              member: {
+                select: {
+                  id: true,
+                  fullName: true
+                }
+              }
+            }
+          }
+        },
         skip,
         take: limit,
         orderBy: { createdAt: 'desc' }
-      }),
-      prisma.churchGroup.count({ where: { deletedAt: null } })
-    ]);
+      });
+      console.log('Church groups fetched:', data.length);
+    } catch (fetchError: any) {
+      console.error('Error fetching church groups:', fetchError);
+      return NextResponse.json({ error: `Fetch error: ${fetchError.message}` }, { status: 500 });
+    }
 
     return NextResponse.json({
       data,
@@ -36,10 +69,10 @@ export async function GET(request: NextRequest) {
         totalPages: Math.ceil(total / limit)
       }
     });
-  } catch (error) {
-    console.error('Error fetching ChurchGroups:', error);
+  } catch (error: any) {
+    console.error('Error in church groups API:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch ChurchGroups' },
+      { error: `Failed to fetch ChurchGroups: ${error.message}` },
       { status: 500 }
     );
   }
