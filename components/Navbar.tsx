@@ -2,13 +2,16 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useSession, signOut } from 'next-auth/react'
+import { usePathname } from 'next/navigation'
 
 export function Navbar() {
-  const { data: session, status } = useSession()
+  const pathname = usePathname()
   const [darkMode, setDarkMode] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
+  
+  // Check if we're in admin area
+  const isAdminArea = pathname?.startsWith('/admin')
 
   useEffect(() => {
     setMounted(true)
@@ -21,7 +24,12 @@ export function Navbar() {
   }, [])
 
   const handleLogout = async () => {
-    await signOut({ callbackUrl: '/login' })
+    try {
+      await fetch('/api/auth/signout', { method: 'POST' })
+      window.location.href = '/login'
+    } catch (error) {
+      console.error('Logout error:', error)
+    }
   }
 
   const toggleDarkMode = () => {
@@ -106,7 +114,7 @@ export function Navbar() {
             <Link href="/posts" className="px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-church-green hover:text-white transition-all duration-200">
               Warta
             </Link>
-            {session ? (
+            {isAdminArea ? (
               <>
                 <Link href="/admin/dashboard" className="px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-church-green hover:text-white transition-all duration-200">
                   Dashboard
@@ -164,7 +172,7 @@ export function Navbar() {
             <Link href="/posts" className="block px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-church-green hover:text-white transition-colors">
               Warta
             </Link>
-            {session ? (
+            {isAdminArea ? (
               <>
                 <Link href="/admin/dashboard" className="block px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-church-green hover:text-white transition-colors">
                   Dashboard
