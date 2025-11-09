@@ -64,7 +64,6 @@ export async function POST(request: NextRequest) {
     
     // Optional fields
     if (body.address) cleanData.address = body.address;
-    if (body.phone) cleanData.phone = body.phone;
     
     console.log('Clean data for Prisma:', JSON.stringify(cleanData, null, 2));
     
