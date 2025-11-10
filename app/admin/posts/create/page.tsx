@@ -4,16 +4,10 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Upload, X, FileText } from 'lucide-react';
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
-
-const ReactQuill = dynamic(() => import('react-quill'), { 
-  ssr: false,
-  loading: () => <p>Loading editor...</p>
-});
 
 interface Category {
   id: string;
-  name: string;
+  title: string;
 }
 
 export default function CreatePostPage() {
@@ -32,12 +26,6 @@ export default function CreatePostPage() {
   });
 
   useEffect(() => {
-    // Load Quill CSS
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'https://cdn.quilljs.com/1.3.6/quill.snow.css';
-    document.head.appendChild(link);
-    
     fetchCategories();
   }, []);
 
@@ -258,20 +246,15 @@ export default function CreatePostPage() {
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Konten <span className="text-red-500">*</span>
               </label>
-              <ReactQuill
-                theme="snow"
+              <textarea
+                required
+                rows={15}
                 value={formData.content}
-                onChange={(content) => setFormData({ ...formData, content })}
-                className="bg-white dark:bg-gray-700 rounded-lg"
-                modules={{
-                  toolbar: [
-                    [{ header: [1, 2, 3, false] }],
-                    ['bold', 'italic', 'underline', 'strike'],
-                    [{ list: 'ordered' }, { list: 'bullet' }],
+                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-church-green focus:border-transparent"
+                placeholder="Tulis konten warta di sini..."
+              />
                     ['link', 'image'],
-                    ['clean']
-                  ]
-                }}
               />
             </div>
 
