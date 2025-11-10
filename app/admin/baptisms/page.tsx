@@ -154,10 +154,10 @@ export default function BaptismAdminPage() {
                         </td>
                         
                         <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
-                          {item.member || '-'}
+                          {item.member?.fullName || '-'}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
-                          {item.baptismDate || '-'}
+                          {item.baptismDate ? format(new Date(item.baptismDate), 'dd MMM yyyy', { locale: id }) : '-'}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
                           {item.baptismPlace || '-'}
