@@ -34,8 +34,10 @@ export async function GET(request: NextRequest) {
         where: { deletedAt: null },
         select: {
           id: true,
+          title: true,
           slug: true,
-          createdAt: true
+          createdAt: true,
+          updatedAt: true
         },
         skip,
         take: limit,
