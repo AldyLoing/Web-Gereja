@@ -5,9 +5,11 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Upload, X, FileText } from 'lucide-react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import 'react-quill/dist/quill.snow.css';
 
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+const ReactQuill = dynamic(() => import('react-quill'), { 
+  ssr: false,
+  loading: () => <p>Loading editor...</p>
+});
 
 interface Category {
   id: string;
@@ -30,6 +32,12 @@ export default function CreatePostPage() {
   });
 
   useEffect(() => {
+    // Load Quill CSS
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://cdn.quilljs.com/1.3.6/quill.snow.css';
+    document.head.appendChild(link);
+    
     fetchCategories();
   }, []);
 
