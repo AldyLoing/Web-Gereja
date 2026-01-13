@@ -1,468 +1,689 @@
-# Warta Jemaat Gereja 🏛️
+<div align="center">
+  <h1>🏛️ Warta Jemaat Gereja</h1>
+  <p><strong>Modern Church Management System</strong></p>
+  <p>A comprehensive church administration platform built with Next.js 15, Prisma ORM, and Supabase</p>
 
-Website Gereja modern berbasis **Next.js 15**, **Prisma ORM**, dan **Supabase** dengan fitur administrasi lengkap untuk mengelola jemaat, keluarga, kelompok pelayanan, dan warta jemaat.
+  ![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js)
+  ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)
+  ![Prisma](https://img.shields.io/badge/Prisma-5-2D3748?style=flat-square&logo=prisma)
+  ![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?style=flat-square&logo=supabase)
+  ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
-## 🎯 Fitur Utama
+  [Live Demo](#) • [Documentation](#installation--setup) • [Report Bug](https://github.com/AldyLoing/Web-Gereja/issues) • [Request Feature](https://github.com/AldyLoing/Web-Gereja/issues)
+</div>
 
-### 1. Dashboard Admin
-- Statistik real-time total jemaat dan keluarga
-- Distribusi anggota per kelompok gereja (PELNAP, PELRAP, PELWAP, PELPRIP, PELPAP)
-- Jumlah ulang tahun bulan ini
-- Jumlah baptisan bulan ini
-- Visualisasi data dengan Recharts (bar chart, pie chart, line chart)
-- Responsive dan interactive charts
+---
 
-### 2. Modul Warta Jemaat / Posts
-- CRUD berita, pengumuman, renungan
-- Multiple kategori per post
-- Upload cover image ke Supabase Storage
-- Status Draft/Publish
-- Rich text editor (React Quill)
-- Auto-generate slug dari judul
+## 📖 Project Overview
 
-### 3. Modul Jemaat Gereja
-- **Kelompok Gereja**: Manajemen kelompok pelayanan dengan statistik anggota
-- **Keluarga**: Data keluarga jemaat dengan relasi ke anggota
-- **Jemaat**: Data lengkap jemaat (NIK, KK, alamat, kontak, dll)
-- **Baptisan**: Record baptisan dengan tempat dan tanggal
-- **Ulang Tahun**: Daftar jemaat berulang tahun per bulan dengan filter
+**Warta Jemaat Gereja** is an enterprise-grade church management system designed to streamline administrative operations, member engagement, and communication within religious congregations. Built on modern web technologies, it provides a scalable, secure, and user-friendly platform for managing church members, families, ministries, baptisms, and bulletins.
 
-### 4. Fitur Tambahan
-- Dark mode dengan toggle
-- Responsive design (Tailwind CSS)
-- Soft delete untuk semua data
-- Filter dan search di setiap modul
-- Authentication dengan NextAuth.js
+This system empowers church administrators with real-time insights, automated workflows, and comprehensive data management capabilities—all within a beautifully designed, responsive interface.
+
+---
+
+## 🎯 The Problem
+
+Churches face significant challenges in managing their communities effectively:
+
+- **Manual record-keeping** leads to data inconsistencies and time waste
+- **Scattered information** across spreadsheets, notebooks, and multiple systems
+- **Limited insights** into congregation demographics and engagement patterns
+- **Communication gaps** between church leadership and members
+- **Security risks** from improper data handling and credential exposure
+- **Difficult coordination** of ministries, events, and member milestones
+- **Lack of accessibility** for administrators working remotely or on mobile devices
+
+Traditional church management approaches are outdated, inefficient, and fail to leverage modern technology to serve communities effectively.
+
+---
+
+## ✨ The Solution
+
+**Warta Jemaat Gereja** transforms church administration through:
+
+### Centralized Data Management
+All member information, family records, baptism history, and ministry assignments in one secure location with robust relational data modeling.
+
+### Real-Time Insights
+Interactive dashboards provide instant visibility into congregation statistics, birthday celebrations, baptism milestones, and ministry distribution.
+
+### Secure Authentication
+Enterprise-grade authentication with NextAuth.js ensures only authorized personnel access sensitive church data.
+
+### Content Management
+Publish bulletins, announcements, and devotionals with a rich text editor, multiple categories, and media management.
+
+### Mobile-First Design
+Responsive interface works seamlessly across desktops, tablets, and smartphones, enabling administrators to work from anywhere.
+
+### Automated Workflows
+Calculate family member counts, track baptism records, manage soft deletes, and auto-generate URL slugs without manual intervention.
+
+---
+
+## 🔄 How It Works
+
+### System Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     Client (Browser)                         │
+│                Next.js 15 App Router + React                 │
+└──────────────────────┬──────────────────────────────────────┘
+                       │
+                       ▼
+┌─────────────────────────────────────────────────────────────┐
+│                  API Layer (Next.js API Routes)              │
+│           Authentication • Business Logic • Validation        │
+└──────────────────────┬──────────────────────────────────────┘
+                       │
+                       ▼
+┌─────────────────────────────────────────────────────────────┐
+│                     Prisma ORM                               │
+│            Type-safe Database Queries • Migrations           │
+└──────────────────────┬──────────────────────────────────────┘
+                       │
+         ┌─────────────┴─────────────┐
+         ▼                           ▼
+┌──────────────────┐        ┌──────────────────┐
+│ Supabase PostgreSQL │      │ Supabase Storage │
+│  Relational Data    │      │   Media Files    │
+└──────────────────┘        └──────────────────┘
+```
+
+### Data Flow
+
+1. **User Authentication**: NextAuth.js validates credentials against encrypted user records
+2. **Data Request**: Client sends request to Next.js API route
+3. **Validation**: Zod schemas validate input data
+4. **Business Logic**: API route processes request with proper authorization checks
+5. **Database Query**: Prisma ORM executes type-safe queries against PostgreSQL
+6. **Response**: Data returned to client with proper error handling
+7. **UI Update**: React components render updated state with optimistic updates
+
+---
+
+## 🚀 Key Features
+
+<table>
+<tr>
+<td width="50%">
+
+### 📊 Real-Time Dashboard
+- Congregation statistics at a glance
+- Interactive charts (bar, pie, line)
+- Birthday and baptism tracking
+- Ministry distribution analysis
+- Gender and age group insights
+
+</td>
+<td width="50%">
+
+### 👥 Member Management
+- Comprehensive member profiles (NIK, KK, contact info)
+- Family relationship mapping
+- Ministry assignment (many-to-many)
+- Advanced search and filtering
+- Soft delete with restore capability
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### 📝 Bulletin Publishing
+- Rich text editor with formatting
+- Image uploads to Supabase Storage
+- Multiple category tagging
+- Draft/Published workflow
+- Auto-generated SEO-friendly slugs
+
+</td>
+<td width="50%">
+
+### 🛡️ Security & Access Control
+- Encrypted password storage (bcrypt)
+- Session-based authentication
+- Role-based permissions (admin/user)
+- Environment-based configuration
+- Secure API key management
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### 🎨 Modern UI/UX
+- Dark mode support
+- Responsive design (mobile-first)
+- Accessible components (WCAG 2.1)
+- Smooth animations
+- Intuitive navigation
+
+</td>
+<td width="50%">
+
+### ⚡ Performance
 - Server-side rendering (SSR)
-- API Routes untuk semua operasi CRUD
+- Optimistic UI updates
+- Image optimization
+- Database query optimization
+- Edge-ready deployment
 
-## 🎨 Color Palette
+</td>
+</tr>
+</table>
 
-- **Hijau Daun**: `#009345`
-- **Hijau Tua**: `#007A36`
-- **Cokelat Pasir**: `#D69A7A`
-- **Kuning Emas**: `#F2C84B` → `#B88A2F`
-- **Putih**: `#FFFFFF`
+---
 
-## 📋 Tech Stack
+## 🛠️ Technology Stack
 
-- **Framework**: Next.js 15 (App Router)
-- **Language**: TypeScript
-- **Database**: PostgreSQL (via Supabase)
-- **ORM**: Prisma 5
-- **Authentication**: NextAuth.js v4
-- **UI**: Tailwind CSS + Shadcn/ui components
-- **Charts**: Recharts
-- **Forms**: React Hook Form + Zod validation
-- **Storage**: Supabase Storage
-- **Deployment**: Vercel
+| Layer | Technology | Purpose |
+|-------|-----------|---------|
+| **Frontend** | Next.js 15 (App Router) | React framework with SSR and routing |
+| **Language** | TypeScript | Type-safe development |
+| **UI Framework** | Tailwind CSS | Utility-first styling |
+| **Component Library** | Shadcn/ui | Accessible, customizable components |
+| **Forms** | React Hook Form + Zod | Form management and validation |
+| **Charts** | Recharts | Data visualization |
+| **Database** | PostgreSQL (Supabase) | Relational data storage |
+| **ORM** | Prisma 5 | Type-safe database client |
+| **Authentication** | NextAuth.js v4 | Session management |
+| **Storage** | Supabase Storage | Media file hosting |
+| **Deployment** | Vercel | Serverless hosting platform |
 
-## 📋 Requirements
+---
 
-- Node.js >= 18.x
-- NPM atau Yarn
-- Supabase Account (free tier available)
-- Git
+## 📦 Installation & Setup
 
-## 🚀 Instalasi
+### Prerequisites
 
-### 1. Clone Repository
+- **Node.js** >= 18.x
+- **npm** or **yarn**
+- **Git**
+- **Supabase Account** (free tier available)
+
+### Step 1: Clone Repository
+
 ```bash
 git clone https://github.com/AldyLoing/Web-Gereja.git
 cd Web-Gereja
 ```
 
-### 2. Install Dependencies
+### Step 2: Install Dependencies
+
 ```bash
 npm install
 ```
 
-### 3. Setup Supabase
+### Step 3: Configure Supabase
 
-#### a. Buat Project Supabase
-1. Kunjungi [supabase.com](https://supabase.com)
-2. Buat project baru
-3. Tunggu database siap (±2 menit)
+1. Create a new project at [supabase.com](https://supabase.com)
+2. Wait for database initialization (~2 minutes)
+3. Navigate to **SQL Editor** in your Supabase dashboard
+4. Copy and execute the contents of `database/init.sql`
 
-#### b. Setup Database
-1. Buka SQL Editor di Supabase Dashboard
-2. Copy dan jalankan file `database/init.sql`
-3. Ini akan membuat semua tabel dan fungsi yang diperlukan
+This will create all required tables, relationships, and database functions.
 
-### 4. Setup Environment Variables
+### Step 4: Environment Configuration
+
+Create environment file from template:
+
 ```bash
 # Windows
 copy .env.example .env
 
-# Mac/Linux
+# macOS/Linux
 cp .env.example .env
 ```
 
-Edit file `.env` dan isi dengan kredensial Supabase Anda:
+**Edit `.env` with your credentials:**
+
 ```env
-# Database (Supabase PostgreSQL)
+# Database Connection (Supabase PostgreSQL)
 DATABASE_URL="postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres"
 
-# NextAuth
+# NextAuth Configuration
 NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="[generate-random-secret]"
+NEXTAUTH_SECRET="[GENERATE-RANDOM-SECRET-HERE]"
 
-# Supabase
+# Supabase API Keys
 NEXT_PUBLIC_SUPABASE_URL="https://[YOUR-PROJECT-REF].supabase.co"
 NEXT_PUBLIC_SUPABASE_ANON_KEY="[YOUR-ANON-KEY]"
 SUPABASE_SERVICE_ROLE_KEY="[YOUR-SERVICE-ROLE-KEY]"
 ```
 
-**Generate NEXTAUTH_SECRET:**
+**Generate a secure `NEXTAUTH_SECRET`:**
+
 ```bash
 openssl rand -base64 32
 ```
 
-### 5. Generate Prisma Client
-```bash
-npm run prisma:generate
-```
+### Step 5: Initialize Prisma
 
-### 6. Run Database Migrations
 ```bash
+# Generate Prisma Client
+npm run prisma:generate
+
+# Run database migrations
 npm run prisma:migrate
 ```
 
-### 7. Seed Database (Optional)
-Jalankan setup script untuk membuat data awal:
+### Step 6: Seed Database (Optional)
+
+Populate your database with initial data:
+
 ```bash
 npm run setup:warta-gereja
 ```
 
-Ini akan membuat:
-- User admin default
-- Kelompok gereja (PELNAP, PELRAP, PELWAP, PELPRIP, PELPAP)
-- Kategori post (15 kategori)
-- Sample data jemaat dan keluarga
+This creates:
+- Default admin user
+- Ministry groups (PELNAP, PELRAP, PELWAP, PELPRIP, PELPAP)
+- Bulletin categories (15 types)
+- Sample member and family data
 
-### 8. Jalankan Development Server
+### Step 7: Start Development Server
+
 ```bash
 npm run dev
 ```
 
-Akses aplikasi di: `http://localhost:3000`
+Access the application at: **http://localhost:3000**
 
-### 9. Build untuk Production
+### Step 8: Production Build
+
 ```bash
 npm run build
 npm start
 ```
 
-## 👤 Login Default
-
-- **Email**: admin@gereja.com
-- **Password**: password
-
-⚠️ **PENTING**: Ganti password default setelah login pertama!
-
-## 📁 Struktur Project
+### Default Login Credentials
 
 ```
-Web-Gereja/
-├── app/                      # Next.js App Router
-│   ├── (auth)/              # Auth pages (login, register, forgot-password)
-│   ├── admin/               # Admin dashboard & modules
-│   │   ├── baptisms/       # Modul baptisan
-│   │   ├── categories/     # Modul kategori
-│   │   ├── church-groups/  # Modul kelompok gereja
-│   │   ├── dashboard/      # Dashboard admin
-│   │   ├── families/       # Modul keluarga
-│   │   ├── members/        # Modul jemaat
-│   │   ├── posts/          # Modul warta/postingan
-│   │   └── settings/       # Pengaturan
-│   ├── api/                # API Routes
-│   └── posts/              # Public posts page
-├── components/             # React components
-│   ├── dashboard/         # Dashboard components
-│   └── layout/            # Layout components
-├── lib/                   # Utilities & configs
-│   ├── auth.ts           # NextAuth configuration
-│   ├── prisma.ts         # Prisma client
-│   └── supabaseClient.ts # Supabase client
-├── prisma/               # Prisma schema
-│   └── schema.prisma
-├── database/             # SQL files & migrations
-│   └── init.sql         # Initial database setup
-├── public/              # Static files
-└── types/               # TypeScript types
+Email: admin@gereja.com
+Password: password
 ```
 
-## 📁 Struktur Database
+⚠️ **CRITICAL**: Change the default password immediately after first login!
 
-### User
-- Email, password (hashed with bcrypt)
-- Name, role (admin/user)
-- Authentication dengan NextAuth.js
+---
 
-### Member (Jemaat)
-- Data pribadi lengkap (NIK, KK, nama, gender, tanggal lahir)
-- Alamat lengkap, kontak (telp, email)
-- Relasi ke Family (many-to-one)
-- Relasi ke Church Groups (many-to-many via MemberChurchGroup)
-- Relasi ke Baptisms (one-to-many)
-- Status aktif/tidak aktif
-- Soft delete support
+## 🔐 Security & API Key Management
 
-### Family (Keluarga)
-- Nama keluarga, nama kepala keluarga
-- Nomor telepon keluarga
-- Total anggota (auto-calculated)
-- Relasi ke Members (one-to-many)
+### Environment Variables Best Practices
 
-### ChurchGroup (Kelompok Gereja)
-- Nama kelompok (PELNAP, PELRAP, PELWAP, PELPRIP, PELPAP)
-- Deskripsi
-- Total anggota (auto-calculated)
-- Relasi ke Members (many-to-many)
+**NEVER commit sensitive credentials to version control.** This project previously experienced an API key leak. Follow these security guidelines:
 
-### Baptism
-- Tanggal baptis, tempat baptis
-- Relasi ke Member (many-to-one)
-- Pelayan baptis
+#### 1. Use `.env` Files Locally
 
-### Post (Warta Jemaat)
-- Judul, slug (auto-generated)
-- Konten (rich text)
-- Cover image URL (stored in Supabase Storage)
-- Status (draft/published)
-- Published date
-- Relasi ke Categories (many-to-many via PostCategory)
+All sensitive configuration must be stored in `.env` files, which are excluded from Git via `.gitignore`:
 
-### Category
-- Nama kategori (Pengumuman, Renungan, Berita, dll)
-- Slug
-- Relasi ke Posts (many-to-many)
-
-## 🔧 Konfigurasi
-
-### Supabase Storage
-Upload gambar cover post disimpan di Supabase Storage bucket `post-covers`:
-- Max file size: 5MB
-- Supported formats: JPG, PNG, WebP
-- Public access untuk display
-
-### Timezone
-Default timezone `Asia/Jakarta` dikonfigurasi di:
-- Prisma schema
-- Next.js config
-- Database functions
-
-### Environment Variables
-Semua konfigurasi environment ada di `.env`:
 ```env
-# Database
-DATABASE_URL=
-
-# NextAuth
-NEXTAUTH_URL=
-NEXTAUTH_SECRET=
-
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-SUPABASE_SERVICE_ROLE_KEY=
+DATABASE_URL="postgresql://postgres:secure_password@host:5432/db"
+NEXTAUTH_SECRET="your-ultra-secure-random-string"
+SUPABASE_SERVICE_ROLE_KEY="your-service-role-key"
 ```
 
-## 📊 Cara Penggunaan
+#### 2. Reference `.env.example`
 
-### 1. Dashboard Admin
-1. Login dengan kredensial admin
-2. Lihat statistik real-time:
-   - Total jemaat, keluarga, kelompok
-   - Ulang tahun dan baptisan bulan ini
-3. Analisa charts:
-   - Distribusi kelompok gereja
-   - Gender distribution
-   - Age groups
-   - Baptisan per bulan
+The repository includes `.env.example` as a template with placeholder values:
 
-### 2. Manajemen Jemaat
-1. **Tambah Jemaat**
-   - Klik **Jemaat** → **+ Tambah Jemaat**
-   - Isi data lengkap (NIK, nama, gender, tanggal lahir, dll)
-   - Pilih keluarga dan kelompok gereja
-   - Simpan
-
-2. **Edit/Hapus Jemaat**
-   - Klik tombol edit/hapus di tabel
-   - Edit data atau soft delete
-
-3. **Filter & Search**
-   - Gunakan search box untuk cari nama
-   - Filter by status, gender, kelompok
-
-### 3. Manajemen Warta Jemaat
-1. **Tambah Postingan**
-   - Menu **Postingan** → **+ Tambah Postingan**
-   - Isi judul dan konten dengan rich editor
-   - Upload cover image (maks 5MB)
-   - Pilih kategori (bisa multiple)
-   - Set status: Draft atau Published
-   - Simpan
-
-2. **Publish/Unpublish**
-   - Toggle status di halaman edit
-   - Draft tidak muncul di halaman publik
-
-### 4. Ulang Tahun & Baptisan
-- **Ulang Tahun**: Filter per bulan, lihat nama dan kontak
-- **Baptisan**: Record baptisan dengan tempat dan pelayan
-
-## 🛠️ Development
-
-### Prisma Commands
-```bash
-# Generate Prisma Client
-npm run prisma:generate
-
-# Run migrations
-npm run prisma:migrate
-
-# Open Prisma Studio (GUI database)
-npm run prisma:studio
-
-# Reset database
-npx prisma migrate reset
+```env
+DATABASE_URL="postgresql://postgres:[YOUR-PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres"
+NEXTAUTH_SECRET="[GENERATE-WITH-openssl-rand-base64-32]"
+NEXT_PUBLIC_SUPABASE_URL="https://[PROJECT-REF].supabase.co"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="[YOUR-ANON-KEY]"
+SUPABASE_SERVICE_ROLE_KEY="[YOUR-SERVICE-ROLE-KEY]"
 ```
 
-### Menambah Fitur Baru
-1. Tambah model di `prisma/schema.prisma`
-2. Generate migration: `npx prisma migrate dev --name nama_fitur`
-3. Buat API route di `app/api/`
-4. Buat UI di `app/admin/`
+#### 3. Verify `.gitignore`
 
-### Custom Tailwind Theme
-Edit `tailwind.config.ts` untuk customize:
-- Colors
-- Fonts
-- Spacing
-- Breakpoints
+Ensure `.gitignore` includes:
 
-### Environment Variables
-Jangan commit file `.env` ke repository!
-Gunakan `.env.example` sebagai template.
-
-## � Deployment ke Vercel
-
-### 1. Push ke GitHub
-```bash
-git add .
-git commit -m "Ready for deployment"
-git push origin main
+```
+.env
+.env.local
+.env.production
+.env.development
 ```
 
-### 2. Deploy di Vercel
-1. Login ke [vercel.com](https://vercel.com)
-2. Import repository dari GitHub
-3. Configure project:
-   - Framework Preset: Next.js
-   - Root Directory: ./
-   - Build Command: `npm run build`
-   - Output Directory: .next
-4. Add Environment Variables (copy dari `.env`)
-5. Deploy!
+#### 4. Rotate Compromised Keys
 
-### 3. Update Vercel Environment
-Setiap kali deploy, pastikan update:
-- `NEXTAUTH_URL` → https://your-domain.vercel.app
-- Supabase sudah production-ready
+If credentials are exposed:
 
-## 📝 Best Practices
+1. **Immediately regenerate** all API keys in Supabase dashboard
+2. **Update** `.env` files with new keys
+3. **Redeploy** your application with updated environment variables
+4. **Revoke** old keys to prevent unauthorized access
+5. **Audit** access logs for suspicious activity
 
-- ✅ Gunakan TypeScript untuk type safety
-- ✅ Validasi input dengan Zod
-- ✅ Handle error dengan try-catch di API routes
-- ✅ Gunakan Server Components untuk SEO
-- ✅ Client Components hanya untuk interactivity
-- ✅ Optimize images dengan Next.js Image
-- ✅ Soft delete untuk data penting
-- ✅ Auto-update calculated fields (total members)
+#### 5. Production Deployment
 
-## 🐛 Troubleshooting
+For Vercel deployment:
 
-### Error: Prisma Client not generated
-```bash
-npm run prisma:generate
+1. Go to **Project Settings** → **Environment Variables**
+2. Add each variable from `.env` individually
+3. Set appropriate environments (Production, Preview, Development)
+4. **Never** hardcode credentials in source code
+
+#### 6. Code Review Checklist
+
+Before committing:
+
+- ✅ No hardcoded passwords, API keys, or secrets
+- ✅ `.env` files listed in `.gitignore`
+- ✅ Only `.env.example` committed (with placeholders)
+- ✅ No console.log statements exposing sensitive data
+
+---
+
+## 💡 Usage & Examples
+
+### Managing Church Members
+
+#### Add New Member
+
+```typescript
+// Navigate to: /admin/members → "Add Member"
+
+// Example Member Data:
+{
+  nik: "1234567890123456",
+  kk: "1234567890123456",
+  name: "John Doe",
+  gender: "male",
+  birth_date: "1990-01-15",
+  address: "123 Church Street",
+  phone: "081234567890",
+  email: "john@example.com",
+  family_id: 1,
+  church_groups: [1, 3] // PELNAP and PELWAP
+}
 ```
 
-### Error: Database connection failed
-- Check `DATABASE_URL` di `.env`
-- Pastikan Supabase project aktif
-- Cek firewall/network
+#### Search and Filter
 
-### Error: NextAuth session undefined
-- Check `NEXTAUTH_URL` dan `NEXTAUTH_SECRET`
-- Restart development server
-- Clear browser cookies
+- **Search by name**: Real-time search in member list
+- **Filter by ministry**: View members by church group
+- **Filter by status**: Active/Inactive members
+- **Sort**: By name, join date, or birthday
 
-### Error: Build failed on Vercel
-- Check environment variables di Vercel
-- Pastikan `DATABASE_URL` accessible dari Vercel
-- Review build logs
+### Publishing Church Bulletins
 
-### Images not loading
-- Check Supabase Storage bucket `post-covers` exists
-- Verify `SUPABASE_SERVICE_ROLE_KEY`
-- Check image URL format
+#### Create Bulletin Post
 
-## � Screenshots
+```typescript
+// Navigate to: /admin/posts → "Create Post"
 
-### Dashboard Admin
-![Dashboard](docs/screenshots/dashboard.png)
-*Real-time statistics dan interactive charts*
+// Example Post Data:
+{
+  title: "Sunday Service Announcement",
+  content: "<p>Service starts at 10 AM...</p>", // Rich HTML
+  cover_image: File, // Upload JPG/PNG (max 5MB)
+  categories: [1, 2], // Multiple categories
+  status: "published", // or "draft"
+  published_at: new Date()
+}
+```
 
-### Manajemen Jemaat
-![Members](docs/screenshots/members.png)
-*CRUD lengkap dengan filter dan search*
+#### Rich Text Editor Features
 
-### Warta Jemaat
-![Posts](docs/screenshots/posts.png)
-*Rich text editor dengan upload gambar*
+- Bold, italic, underline formatting
+- Headings (H1-H6)
+- Bullet and numbered lists
+- Links and images
+- Blockquotes
+
+### Dashboard Analytics
+
+Access real-time statistics at `/admin/dashboard`:
+
+- **Total Members**: Active congregation count
+- **Total Families**: Registered families
+- **Birthdays This Month**: Upcoming celebrations
+- **Baptisms This Month**: Recent baptisms
+- **Ministry Distribution**: Bar chart showing member distribution across ministries
+- **Gender Breakdown**: Pie chart of male/female ratio
+- **Age Groups**: Demographics visualization
+
+---
+
+## 🎯 Use Cases
+
+### Small to Medium Churches (50-500 members)
+- Digitize paper-based member records
+- Track ministry participation
+- Publish weekly bulletins online
+- Monitor congregation growth trends
+
+### Large Churches (500+ members)
+- Manage multiple ministry groups
+- Generate comprehensive reports
+- Coordinate family events
+- Track baptism and milestone records
+
+### Multi-Campus Churches
+- Centralized member database
+- Unified bulletin publishing
+- Cross-campus analytics
+- Consistent data standards
+
+### Church Administrators
+- Reduce administrative overhead
+- Access data remotely (mobile)
+- Generate reports for leadership
+- Maintain GDPR/data privacy compliance
+
+---
+
+## 🗺️ Roadmap
+
+### Q1 2026
+- [ ] SMS/Email notifications for birthdays and events
+- [ ] Attendance tracking system
+- [ ] Financial contribution management
+- [ ] Mobile app (React Native)
+
+### Q2 2026
+- [ ] Event calendar with RSVP
+- [ ] Volunteer scheduling
+- [ ] Prayer request management
+- [ ] Multi-language support (English, Indonesian)
+
+### Q3 2026
+- [ ] Advanced reporting and exports (PDF, Excel)
+- [ ] Integration with church accounting software
+- [ ] Video streaming integration
+- [ ] Member self-service portal
+
+### Q4 2026
+- [ ] AI-powered member engagement insights
+- [ ] Automated follow-up workflows
+- [ ] Multi-tenant support (multiple churches)
+- [ ] Advanced security features (2FA, SSO)
+
+---
+
+## 🌍 Impact
+
+### Social Impact
+- **Strengthens community bonds** through better communication
+- **Preserves family histories** and church heritage
+- **Reduces administrative burden**, allowing more time for pastoral care
+- **Increases accessibility** for elderly members and those with disabilities
+
+### Digital Transformation
+- **Modernizes church operations** with 21st-century technology
+- **Reduces paper waste** through digital record-keeping
+- **Enables data-driven decisions** for church leadership
+- **Improves transparency** in member management
+
+### Governance
+- **Ensures data accuracy** with validated inputs
+- **Maintains privacy compliance** (GDPR-ready architecture)
+- **Provides audit trails** for all data changes
+- **Secures sensitive information** with industry-standard encryption
+
+---
+
+## 🎯 Target Market
+
+### Primary Users
+- **Church Administrators**: Manage daily operations and member records
+- **Pastors & Ministry Leaders**: Access member information and engagement metrics
+- **Church Secretaries**: Handle data entry and bulletin publishing
+
+### Organization Size
+- Small churches (50-200 members)
+- Medium churches (200-500 members)
+- Large churches (500+ members)
+
+### Geographic Focus
+- Indonesia (primary)
+- Southeast Asia
+- Global Indonesian diaspora communities
+
+---
+
+## 💭 Why This Matters
+
+Churches are the backbone of many communities, yet most lack modern tools to serve their congregations effectively. Warta Jemaat Gereja bridges this gap by providing:
+
+1. **Accessible Technology**: No technical expertise required—intuitive interface for all skill levels
+2. **Cost-Effective Solution**: Built on free-tier infrastructure (Supabase, Vercel) with no licensing fees
+3. **Open Source**: Transparent, auditable, and community-driven development
+4. **Scalable Architecture**: Grows with your church from 50 to 5,000+ members
+5. **Privacy-First Design**: Your data stays under your control with self-hosting options
+
+By empowering churches with modern technology, we enable them to focus on their core mission: serving their communities with compassion and excellence.
+
+---
+
+## 🌟 Vision & Mission
+
+### Vision
+To become the leading open-source church management platform, empowering religious organizations worldwide with accessible, secure, and innovative technology.
+
+### Mission
+- **Democratize** church technology by providing enterprise-grade tools at zero cost
+- **Simplify** church administration through intuitive design and automation
+- **Protect** member privacy with best-in-class security practices
+- **Foster** community collaboration through open-source development
+- **Enable** data-driven ministry through actionable insights
+
+---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please follow these steps:
+We welcome contributions from developers, designers, translators, and church technology enthusiasts!
 
-1. Fork repository
-2. Create feature branch: `git checkout -b feature/AmazingFeature`
-3. Commit changes: `git commit -m 'Add some AmazingFeature'`
-4. Push to branch: `git push origin feature/AmazingFeature`
-5. Open Pull Request
+### How to Contribute
+
+1. **Fork** the repository
+2. **Create** a feature branch: `git checkout -b feature/amazing-feature`
+3. **Commit** your changes: `git commit -m 'Add amazing feature'`
+4. **Push** to branch: `git push origin feature/amazing-feature`
+5. **Open** a Pull Request
+
+### Contribution Guidelines
+
+- Follow existing code style (Prettier + ESLint configured)
+- Write meaningful commit messages
+- Add tests for new features
+- Update documentation as needed
+- Keep PRs focused on single features/fixes
+
+### Development Setup
+
+```bash
+# Fork and clone your fork
+git clone https://github.com/YOUR-USERNAME/Web-Gereja.git
+
+# Install dependencies
+npm install
+
+# Create feature branch
+git checkout -b feature/my-feature
+
+# Make changes and test
+npm run dev
+
+# Run linting
+npm run lint
+
+# Commit and push
+git add .
+git commit -m "Description of changes"
+git push origin feature/my-feature
+```
+
+### Areas for Contribution
+
+- 🐛 Bug fixes
+- ✨ New features from roadmap
+- 📝 Documentation improvements
+- 🌍 Translations (internationalization)
+- 🎨 UI/UX enhancements
+- ⚡ Performance optimizations
+- 🧪 Test coverage expansion
+
+---
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+### What This Means
+
+✅ You can use this project commercially  
+✅ You can modify and distribute it  
+✅ You can use it privately  
+✅ No warranty or liability from the author
+
+---
 
 ## 👨‍💻 Developer
 
 **Aldy Loing**
+
+- Email: [loingaldy@gmail.com](mailto:loingaldy@gmail.com)
 - GitHub: [@AldyLoing](https://github.com/AldyLoing)
-- Repository: [Web-Gereja](https://github.com/AldyLoing/Web-Gereja)
-
-## 🙏 Acknowledgments
-
-- Next.js Team untuk amazing framework
-- Vercel untuk hosting platform
-- Supabase untuk database dan storage
-- Tailwind CSS untuk styling
-- Shadcn/ui untuk beautiful components
-- Recharts untuk data visualization
-
-## �📞 Support
-
-Untuk bantuan lebih lanjut, silakan:
-- Buka issue di GitHub
-- Hubungi administrator gereja
-- Email: support@example.com
+- Repository: [github.com/AldyLoing/Web-Gereja](https://github.com/AldyLoing/Web-Gereja)
 
 ---
 
-**Warta Jemaat Gereja** - Sistem Manajemen Gereja Modern  
-Dibangun dengan ❤️ menggunakan Next.js 15, TypeScript, Prisma, dan Supabase
+## 🙏 Acknowledgments
 
-*Version 1.0.0 - Last Updated: November 2025*
+Built with exceptional open-source tools:
+
+- **[Next.js](https://nextjs.org)** - The React framework for production
+- **[Vercel](https://vercel.com)** - Deployment and hosting platform
+- **[Supabase](https://supabase.com)** - Open-source Firebase alternative
+- **[Prisma](https://prisma.io)** - Next-generation ORM
+- **[Tailwind CSS](https://tailwindcss.com)** - Utility-first CSS framework
+- **[Shadcn/ui](https://ui.shadcn.com)** - Beautifully designed components
+- **[Recharts](https://recharts.org)** - Composable charting library
+
+---
+
+## 📞 Support
+
+Need help? We're here for you:
+
+- 📧 Email: [loingaldy@gmail.com](mailto:loingaldy@gmail.com)
+- 🐛 Issues: [GitHub Issues](https://github.com/AldyLoing/Web-Gereja/issues)
+- 💬 Discussions: [GitHub Discussions](https://github.com/AldyLoing/Web-Gereja/discussions)
+
+---
+
+<div align="center">
+  <strong>Warta Jemaat Gereja</strong> - Empowering Churches Through Technology
+  
+  Built with ❤️ using Next.js 15, TypeScript, Prisma & Supabase
+  
+  **Version 1.0.0** • Last Updated: January 2026
+
+  [⭐ Star this repo](https://github.com/AldyLoing/Web-Gereja) if you find it useful!
+</div>

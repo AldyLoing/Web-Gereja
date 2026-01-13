@@ -1,22 +1,54 @@
-/vendor/
+# Dependencies
 /node_modules/
+/vendor/
+
+# Environment Variables (NEVER COMMIT THESE!)
+.env
+.env.local
+.env.development
+.env.production
+.env.backup
+.env.*.local
+
+# Next.js Build Output
+.next/
+out/
+build/
+
+# Production
 /public/hot
 /public/storage
 /storage/*.key
 /storage/app/public/*
 !/storage/app/public/.gitignore
-.env
-.env.local
-.env.backup
-.env.production
+
+# Vercel
+.vercel
+
+# Testing
 .phpunit.result.cache
-Homestead.json
-Homestead.yaml
-auth.json
-npm-debug.log
-yarn-error.log
+coverage/
+
+# IDE
 /.fleet
 /.idea
 /.vscode
-.next/
-.vercel
+*.swp
+*.swo
+*~
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Misc
+.DS_Store
+*.pem
+Homestead.json
+Homestead.yaml
+auth.json
+
+# Prisma
+/prisma/dev.db
+/prisma/dev.db-journal
