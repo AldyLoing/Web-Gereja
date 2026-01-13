@@ -9,7 +9,7 @@
   ![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?style=flat-square&logo=supabase)
   ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
-  [Live Demo](#) • [Documentation](#installation--setup) • [Report Bug](https://github.com/AldyLoing/Web-Gereja/issues) • [Request Feature](https://github.com/AldyLoing/Web-Gereja/issues)
+  [Live Demo](web-imanuel.vercel.app) • [Documentation](#installation--setup) • [Report Bug](https://github.com/AldyLoing/Web-Gereja/issues) • [Request Feature](https://github.com/AldyLoing/Web-Gereja/issues)
 </div>
 
 ---
