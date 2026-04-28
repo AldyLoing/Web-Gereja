@@ -9,6 +9,8 @@ import { supabase } from "@/lib/supabaseClient";
  */
 export async function GET() {
   try {
+    const env = process.env as unknown as Record<string, string | undefined>;
+
     // Test 1: Check if Supabase client is initialized
     if (!supabase) {
       return NextResponse.json(
@@ -72,7 +74,7 @@ export async function GET() {
       timestamp: new Date().toISOString(),
       environment: process.env.NODE_ENV,
       database: {
-        url: process.env.SUPABASE_URL?.replace(/https?:\/\//, ""),
+        url: (env.SUPABASE_URL || env.NEXT_PUBLIC_SUPABASE_URL || "").replace(/https?:\/\//, ""),
         connected: true,
       },
       tables: {

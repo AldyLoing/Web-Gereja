@@ -7,7 +7,8 @@ import Link from 'next/link';
 
 interface Category {
   id: string;
-  title: string;
+  name?: string;
+  title?: string;
 }
 
 export default function CreatePostPage() {
@@ -275,7 +276,7 @@ export default function CreatePostPage() {
                       className="w-4 h-4 text-church-green border-gray-300 rounded focus:ring-church-green"
                     />
                     <span className="text-sm text-gray-700 dark:text-gray-300">
-                      {category.name}
+                      {category.name || category.title || '-'}
                     </span>
                   </label>
                 ))}
