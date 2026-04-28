@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
+import BirthdayVerse from '@/components/BirthdayVerse'
 
 export default function HomePage() {
   return (
@@ -35,6 +36,11 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* Birthday Verse (weekly) */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12">
+          <BirthdayVerse />
+        </div>
 
         {/* Features Section */}
         <section className="py-16">
