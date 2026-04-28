@@ -32,22 +32,26 @@ export async function GET() {
     if (cache && new Date(cache.updatedAt) >= lastSunday) {
       return NextResponse.json(cache)
     }
+    // Use an internal static list of verses to avoid external API failures on deploy
+    const verses: Array<{ text: string; reference: string }> = [
+      { text: 'TUHAN adalah gembalaku, takkan kekurangan aku.', reference: 'Mazmur 23:1' },
+      { text: 'Segala perkara dapat kutanggung dalam Dia yang memberi kekuatan kepadaku.', reference: 'Filipi 4:13' },
+      { text: 'Sebab Aku tahu rancangan-rancangan apa yang ada pada-Ku mengenai kamu, demikianlah firman TUHAN, yaitu rancangan damai sejahtera dan bukan rancangan kecelakaan.', reference: 'Yeremia 29:11' },
+      { text: 'Kasih itu sabar, kasih itu murah hati; ia tidak cemburu. Ia tidak memegahkan diri dan tidak sombong.', reference: '1 Korintus 13:4' },
+      { text: 'Percayalah kepada TUHAN dengan segenap hatimu, dan janganlah bersandar kepada pengertianmu sendiri.', reference: 'Amsal 3:5' },
+      { text: 'TUHAN itu baik; Ia adalah tempat perlindungan pada waktu kesusahan; Ia mengenal orang-orang yang berlindung kepada-Nya.', reference: 'Nahum 1:7' },
+      { text: 'Bersukacitalah senantiasa.', reference: '1 Tesalonika 5:16' },
+      { text: 'Janganlah takut, sebab Aku menyertai engkau; janganlah bimbang, sebab Aku ini Allahmu.', reference: 'Yesaya 41:10' }
+    ]
 
-    // Use free API from labs.bible.org to fetch a random passage
-    const res = await fetch('https://labs.bible.org/api/?passage=random&type=json')
-    if (!res.ok) {
-      throw new Error('Bible API error')
-    }
-
-    const json = await res.json()
-    // API returns an array of verse fragments; join into one string
-    const first = json[0]
-    const text = first.text?.trim() ?? ''
-    const reference = `${first.bookname} ${first.chapter}:${first.verse}`
+    // pick a verse deterministically per week (so all users see same verse during a week)
+    const weekSeed = Math.floor(+lastSunday / (1000 * 60 * 60 * 24 * 7))
+    const idx = Math.abs(weekSeed) % verses.length
+    const chosen = verses[idx]
 
     const item: CacheItem = {
-      text,
-      reference,
+      text: chosen.text,
+      reference: chosen.reference,
       updatedAt: new Date().toISOString(),
     }
 
